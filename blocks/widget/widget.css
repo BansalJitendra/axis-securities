@@ -34,7 +34,9 @@
 }
 
 /* ------------------------------------------------------------------ */
+
 /* Latest Recommendations                                              */
+
 /* ------------------------------------------------------------------ */
 
 .widget-recommendations .widget-reco-lead {
@@ -106,6 +108,7 @@
   margin: 4px 0;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .widget-reco-badge img {
   width: auto;
   height: 22px;
@@ -121,6 +124,7 @@
   color: var(--text-color);
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .widget-reco-name img {
   width: auto;
   height: 28px;
@@ -137,7 +141,9 @@
 }
 
 /* ------------------------------------------------------------------ */
+
 /* Platforms for Seamless Access                                       */
+
 /* ------------------------------------------------------------------ */
 
 .widget-platforms > div > div {

@@ -1,4 +1,5 @@
 /* Block: cards-segments -- design migrated from axisdirect.in homepage */
+
 /* Values extracted from source computed styles (getComputedStyle). */
 
 .cards-segments > ul {
@@ -10,6 +11,26 @@
   justify-content: center;
   align-items: stretch;
   gap: 16px;
+}
+
+/* --- Segment pill tiles (base) --- */
+.cards-segments > ul > li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background-color: var(--background-color);
+}
+
+.cards-segments > ul > li > .cards-segments-card-body {
+  margin: 0;
+  flex: 0 1 auto;
+}
+
+.cards-segments > ul > li > .cards-segments-card-body p {
+  margin: 0;
 }
 
 /* --- Heading row (first li): spans full width, no pill chrome --- */
@@ -41,17 +62,6 @@
   text-align: center;
 }
 
-/* --- Segment pill tiles --- */
-.cards-segments > ul > li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  background-color: var(--background-color);
-}
-
 .cards-segments .cards-segments-card-image {
   flex: 0 0 auto;
   line-height: 0;
@@ -61,15 +71,6 @@
   width: 32px;
   height: 32px;
   object-fit: contain;
-}
-
-.cards-segments > ul > li > .cards-segments-card-body {
-  margin: 0;
-  flex: 0 1 auto;
-}
-
-.cards-segments > ul > li > .cards-segments-card-body p {
-  margin: 0;
 }
 
 .cards-segments > ul > li a:any-link {

@@ -109,7 +109,7 @@ export default function decorate(block) {
     cardsRow.classList.add('appdownload-cards');
     [...cardsRow.children].forEach((card, i) => {
       card.classList.add('appdownload-card');
-      card.classList.add(i === 0 ? 'appdownload-card--investor' : 'appdownload-card--trader');
+      card.classList.add(i === 0 ? 'appdownload-card-investor' : 'appdownload-card-trader');
       decorateCard(card);
     });
   }
