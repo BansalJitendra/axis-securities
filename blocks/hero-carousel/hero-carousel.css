@@ -71,6 +71,17 @@
   color: #575757;
 }
 
+/* Description subtitle (the middle paragraph on every slide) — regular weight,
+   muted, smaller than the bold title above it. */
+/* stylelint-disable-next-line no-descending-specificity */
+.hero-carousel-text > p:not(:first-child, :last-child) {
+  margin-top: 12px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #616161;
+}
+
 /* CTA button */
 .hero-carousel-text p:last-child {
   margin-top: 24px;
