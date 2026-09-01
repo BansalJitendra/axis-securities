@@ -1,20 +1,149 @@
+/* Axis Direct footer — matched to https://www.axisdirect.in/ */
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  background-color: #fff;
+  color: var(--text-color, #282828);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs, 14px);
+  border-top: 1px solid var(--border-color, #e2e2e2);
 }
 
 footer .footer > div {
   margin: auto;
   max-width: 1200px;
-  padding: 40px 24px 24px;
+  padding: 24px;
 }
 
 footer .footer p {
-  margin: 0;
+  margin: 0 0 8px;
+}
+
+footer .footer a:any-link {
+  color: var(--text-color, #282828);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+}
+
+footer .footer a:hover {
+  color: var(--brand-accent, #ed1164);
+  text-decoration: underline;
+}
+
+footer .footer h3 {
+  margin: 0 0 12px;
+  color: var(--brand-primary, #97144d);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* brand logo */
+footer .footer-brand {
+  padding-bottom: 8px;
+}
+
+footer .footer-brand img {
+  max-height: 40px;
+  width: auto;
+}
+
+/* primary link columns */
+footer .footer-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px 32px;
+}
+
+footer .footer-links ul {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+}
+
+footer .footer-links li {
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+/* contact + app download */
+footer .footer-contact h3 {
+  margin-top: 16px;
+}
+
+footer .footer-contact img {
+  height: 44px;
+  width: auto;
+  margin-right: 12px;
+}
+
+/* A-Z stocks index */
+footer .footer-stocks-index ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+footer .footer-stocks-index li {
+  font-weight: 700;
+}
+
+/* legal / regulatory disclosures */
+footer .footer-legal {
+  background: var(--grey-bg, #f9f9f9);
+  border-top: 1px solid var(--border-color, #e2e2e2);
+  color: #575757;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+footer .footer-legal h3 {
+  font-size: 13px;
+}
+
+footer .footer-legal ul {
+  margin: 8px 0;
+  padding-left: 18px;
+}
+
+footer .footer-legal li {
+  margin-bottom: 6px;
+}
+
+/* bottom policy bar + copyright */
+footer .footer-bottom {
+  border-top: 1px solid var(--border-color, #e2e2e2);
+  color: #575757;
+  font-size: 12px;
+}
+
+footer .footer-bottom p:last-child {
+  margin-top: 8px;
+  color: var(--text-color, #282828);
+}
+
+@media (width >= 600px) {
+  footer .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (width >= 900px) {
   footer .footer > div {
-    padding: 40px 32px 24px;
+    padding: 32px;
+  }
+
+  footer .footer-links {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  footer .footer-contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 48px;
   }
 }
