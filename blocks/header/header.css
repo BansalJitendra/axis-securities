@@ -375,6 +375,13 @@ header nav[aria-expanded='true'] .nav-brand {
    Desktop — two rows: maroon bar (logo + nav + Aa) + white bar (search+CTA)
    ===================================================================== */
 @media (width >= 900px) {
+  /* the two-row header (maroon 44px + white tools bar) is taller than the
+     global --nav-height (78px); let the container grow so the white bar's
+     search + CTAs aren't clipped / overlapping the hero */
+  header {
+    height: auto;
+  }
+
   header .nav-wrapper {
     background: var(--nav-maroon);
   }
