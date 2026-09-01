@@ -1,0 +1,38 @@
+{
+  "variantName": "cards-segments",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-09-01T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.axisdirect.in/",
+    "originPage": "Axis Direct homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "feature",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "icon + label",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "segment / category tile grids",
+      "icon + label navigation grids",
+      "product-family shortcut grids"
+    ],
+    "notSuitableFor": [
+      "large image cards with long descriptions",
+      "text-heavy feature cards with bullet lists"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-09-01T00:00:00.000Z"
+  }
+}

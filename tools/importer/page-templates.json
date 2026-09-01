@@ -1,0 +1,99 @@
+{
+  "metadata": {
+    "projectType": "da"
+  },
+  "templates": [
+    {
+      "name": "home",
+      "urls": [
+        "https://www.axisdirect.in/"
+      ],
+      "representativeUrl": "https://www.axisdirect.in/",
+      "urlPattern": "/",
+      "description": "Axis Direct homepage: hero carousel, open-account lead capture, trust stats, segment tiles, live recommendations, platform showcase, key features, and app-download panels.",
+      "blocks": [
+        {
+          "name": "hero-carousel",
+          "instances": [
+            ".mui-cdmdob .swiper-wrapper",
+            ".mui-cdmdob"
+          ]
+        },
+        {
+          "name": "widget",
+          "instances": [
+            "#main-content > div.mui-1b45yeg > div.MuiStack-root.mui-cdmdob > div.mui-zmt9z3 > div.swiper > div.MuiBox-root.mui-u14qbz",
+            ".mui-1ump8tf",
+            ".mui-on6ge4"
+          ]
+        },
+        {
+          "name": "columns-stats",
+          "instances": [
+            ".mui-158jxei"
+          ]
+        },
+        {
+          "name": "cards-segments",
+          "instances": [
+            ".mui-1frjd1d"
+          ]
+        },
+        {
+          "name": "cards-features",
+          "instances": [
+            ".mui-10os289"
+          ]
+        },
+        {
+          "name": "columns-appdownload",
+          "instances": [
+            ".mui-o9n91k"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "rc1",
+          "name": "Hero",
+          "selector": [
+            ".mui-cdmdob"
+          ],
+          "style": null,
+          "blocks": [
+            "hero-carousel",
+            "widget"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc3",
+          "name": "Trust, Segments, Recommendations, Platforms & Features",
+          "selector": [
+            ".mui-103t6ge"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-stats",
+            "cards-segments",
+            "widget",
+            "cards-features"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc4",
+          "name": "App Download",
+          "selector": [
+            ".mui-o9n91k"
+          ],
+          "style": null,
+          "blocks": [
+            "columns-appdownload"
+          ],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

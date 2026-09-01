@@ -1,0 +1,24 @@
+/* Axis Direct brand tokens — extracted from https://www.axisdirect.in/ */
+:root {
+  /* fonts */
+  --heading-font-family: "Lato", "Helvetica Neue", helvetica, arial, sans-serif;
+  --body-font-family: "Lato", "Helvetica Neue", helvetica, arial, sans-serif;
+
+  /* brand colors */
+  --brand-primary: #97144d;      /* deep maroon — primary CTAs */
+  --brand-primary-dark: #7a1040; /* hover shade */
+  --brand-accent: #ed1164;       /* pink — links, accents */
+  --brand-accent-dark: #c60d52;  /* accent hover */
+  --grey-bg: #f9f9f9;            /* light section background */
+  --border-color: #e2e2e2;       /* card / chip borders */
+
+  /* base */
+  --background-color: #fff;
+  --text-color: #282828;
+  --text-muted: #616161;
+  --link-color: var(--brand-accent);
+  --link-hover-color: var(--brand-accent-dark);
+
+  /* nav height */
+  --nav-height: 78px;
+}

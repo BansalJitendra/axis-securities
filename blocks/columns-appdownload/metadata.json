@@ -1,0 +1,37 @@
+{
+  "variantName": "columns-appdownload",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-09-01T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.axisdirect.in/",
+    "originPage": "Axis Direct homepage",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "feature",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "two side-by-side promo panels with heading + text + ratings + QR image + store badges",
+    "buttonCount": 2,
+    "imageCount": 2
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "app-download promo sections",
+      "two-panel side-by-side promos with images and CTAs"
+    ],
+    "notSuitableFor": [
+      "3-up compact metric strips (use columns-stats)",
+      "repeating item grids (use cards)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-09-01T00:00:00.000Z"
+  }
+}

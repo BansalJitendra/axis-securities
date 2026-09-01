@@ -1,0 +1,39 @@
+{
+  "variantName": "hero-carousel",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-09-01T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.axisdirect.in/",
+    "originPage": "Axis Direct homepage",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "accent",
+    "density": "spacious",
+    "purpose": "hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "heading + subheading + CTA + image",
+    "buttonCount": 1,
+    "imageCount": 1,
+    "carousel": true
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "homepage promotional banners",
+      "multi-slide hero carousels",
+      "campaign landing intros with heading + CTA + illustration"
+    ],
+    "notSuitableFor": [
+      "text-only heros with no background image",
+      "in-content narrow banners"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-09-01T00:00:00.000Z"
+  }
+}

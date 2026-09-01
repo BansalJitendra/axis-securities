@@ -1,0 +1,81 @@
+/* Block: columns-stats — trust/stats row (icon + value graphic + label).
+   Values extracted from source computed styles (axisdirect.in .mui-158jxei). */
+
+/* Row: 3-up on desktop, stacked on mobile. */
+.columns-stats > div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 32px 24px;
+  border-radius: 16px 16px 0 0;
+}
+
+/* Each stat cell. */
+.columns-stats .columns-stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 28px;
+}
+
+/* Separators between cells — source uses 2px #f1f1f1 dividers.
+   Horizontal on mobile (stacked), vertical on desktop (row). */
+.columns-stats .columns-stats-item:not(:last-child) {
+  border-bottom: 2px solid #f1f1f1;
+}
+
+/* Big value graphic (e.g. "₹0", "₹20/order", "5M+"). */
+.columns-stats .columns-stats-value {
+  width: 100%;
+  max-width: 242px;
+}
+
+.columns-stats .columns-stats-value img {
+  display: block;
+  width: 100%;
+  height: 117px;
+  object-fit: contain;
+}
+
+/* Caption row: small icon + label. */
+.columns-stats .columns-stats-caption {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.columns-stats .columns-stats-caption img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.columns-stats .columns-stats-label {
+  font-family: var(--body-font-family);
+  font-size: 19.8px;
+  font-weight: 700;
+  line-height: 25.74px;
+  letter-spacing: 0.16px;
+  color: var(--text-color);
+}
+
+@media (width >= 900px) {
+  .columns-stats > div {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 48px;
+  }
+
+  .columns-stats .columns-stats-item {
+    flex: 1;
+  }
+
+  .columns-stats .columns-stats-item:not(:last-child) {
+    border-bottom: 0;
+    border-right: 2px solid #f1f1f1;
+  }
+}

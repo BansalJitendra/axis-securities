@@ -1,0 +1,234 @@
+/* Block: hero-carousel — rotating promotional hero (text + illustration).
+   Values extracted from source computed styles (www.axisdirect.in). */
+
+/* Full-bleed background: escape the section max-width/padding. */
+.hero-carousel-container .hero-carousel-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero-carousel {
+  position: relative;
+  overflow: hidden;
+  background-color: #fffefd;
+  color: var(--text-color);
+}
+
+/* Sliding track holds all slides in a row. */
+.hero-carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.hero-carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+}
+
+/* Cell = the flex row that centers content within a max width. */
+.hero-carousel-cell {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Text column */
+.hero-carousel-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero-carousel-text h1 {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.15;
+  color: var(--text-color);
+}
+
+/* Promo subtitle (slides 2-5 use a <p> instead of <h1>). */
+.hero-carousel-text > p:first-child {
+  margin: 0;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #575757;
+}
+
+.hero-carousel-text p {
+  margin: 16px 0 0;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #575757;
+}
+
+/* CTA button */
+.hero-carousel-text p:last-child {
+  margin-top: 24px;
+}
+
+.hero-carousel-text p:last-child a:any-link,
+.hero-carousel a.button:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 24px;
+  background-color: var(--brand-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.hero-carousel-text p:last-child a:any-link:hover,
+.hero-carousel-text p:last-child a:any-link:focus-visible,
+.hero-carousel a.button:any-link:hover,
+.hero-carousel a.button:any-link:focus-visible {
+  background-color: var(--brand-primary-dark, #7a103e);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Image column */
+.hero-carousel-image {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-carousel-image p {
+  margin: 0;
+}
+
+.hero-carousel img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Navigation arrows */
+.hero-carousel-nav {
+  position: absolute;
+  inset: auto 0 12px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  pointer-events: none;
+}
+
+.hero-carousel-arrow {
+  pointer-events: auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-color, #e2e2e2);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--brand-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.hero-carousel-arrow::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+}
+
+.hero-carousel-prev::before {
+  transform: rotate(135deg);
+  margin-left: 4px;
+}
+
+.hero-carousel-next::before {
+  transform: rotate(-45deg);
+  margin-right: 4px;
+}
+
+.hero-carousel-arrow:hover {
+  border-color: var(--brand-primary);
+}
+
+/* Dots */
+.hero-carousel-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hero-carousel-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #d9c3cd;
+  cursor: pointer;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.hero-carousel-dot.active {
+  width: 22px;
+  border-radius: 4px;
+  background: var(--brand-primary);
+}
+
+@media (width >= 900px) {
+  .hero-carousel {
+    min-height: 496px;
+  }
+
+  .hero-carousel-cell {
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+    padding: 48px 64px;
+    min-height: 496px;
+    box-sizing: border-box;
+  }
+
+  .hero-carousel-text {
+    flex: 0 0 40%;
+  }
+
+  .hero-carousel-image {
+    flex: 1 1 60%;
+  }
+
+  .hero-carousel-text h1 {
+    font-size: 46px;
+    line-height: 1.12;
+  }
+
+  .hero-carousel-text > p:first-child,
+  .hero-carousel-text p {
+    font-size: 20px;
+  }
+
+  .hero-carousel-nav {
+    inset: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+}

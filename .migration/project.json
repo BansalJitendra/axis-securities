@@ -1,0 +1,12 @@
+{
+  "type": "da",
+  "pluginRoot": "/home/node/.excat-marketplaces/excat-marketplace/excat",
+  "sites": {
+    "axis-securities": {
+      "previewOrg": "BansalJitendra",
+      "previewSite": "axis-securities",
+      "contentHostUrl": "https://content.da.live/bansaljitendra/axis-securities/",
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json"
+    }
+  }
+}

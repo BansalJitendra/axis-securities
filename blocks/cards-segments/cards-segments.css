@@ -1,0 +1,97 @@
+/* Block: cards-segments -- design migrated from axisdirect.in homepage */
+/* Values extracted from source computed styles (getComputedStyle). */
+
+.cards-segments > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+}
+
+/* --- Heading row (first li): spans full width, no pill chrome --- */
+.cards-segments > ul > li:first-child {
+  flex: 0 0 100%;
+  display: block;
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: center;
+}
+
+.cards-segments > ul > li:first-child .cards-segments-card-body {
+  margin: 0;
+}
+
+.cards-segments > ul > li:first-child .cards-segments-card-body:empty {
+  display: none;
+}
+
+.cards-segments h2 {
+  margin: 0;
+  color: var(--text-color);
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  font-size: var(--heading-font-size-xl);
+  line-height: 1.31;
+  text-align: center;
+}
+
+/* --- Segment pill tiles --- */
+.cards-segments > ul > li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background-color: var(--background-color);
+}
+
+.cards-segments .cards-segments-card-image {
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.cards-segments .cards-segments-card-image img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.cards-segments > ul > li > .cards-segments-card-body {
+  margin: 0;
+  flex: 0 1 auto;
+}
+
+.cards-segments > ul > li > .cards-segments-card-body p {
+  margin: 0;
+}
+
+.cards-segments > ul > li a:any-link {
+  color: var(--text-color);
+  font-weight: 400;
+  font-size: var(--body-font-size-s);
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cards-segments > ul > li a:hover {
+  color: var(--brand-primary);
+  text-decoration: none;
+}
+
+@media (width >= 900px) {
+  .cards-segments > ul {
+    gap: 20px 16px;
+  }
+
+  .cards-segments > ul > li:first-child {
+    margin-bottom: 16px;
+  }
+}
