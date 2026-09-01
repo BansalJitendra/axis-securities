@@ -313,3 +313,128 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* -------------------------------------------------------------------------
+   "Open your account" default-content card
+   Default content (h2 + p's) rendered as the bordered account-opening card
+   from the source hero. Values extracted from getComputedStyle on
+   https://www.axisdirect.in/. Static presentation only (no JS).
+   ------------------------------------------------------------------------- */
+main .section > .default-content-wrapper:has(> h2#open-your-account) {
+  box-sizing: border-box;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 24px;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 16px 24px rgb(0 0 0 / 8%);
+  color: var(--text-color);
+}
+
+/* reset default heading/paragraph margins inside the card */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > * {
+  margin: 0;
+}
+
+/* heading */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-color);
+}
+
+/* subtitle */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(2) {
+  margin-top: 8px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-color);
+}
+
+/* icon (88 x 88 in source) */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(3) {
+  margin-top: 16px;
+  line-height: 0;
+}
+
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(3) img {
+  width: 88px;
+  height: 88px;
+}
+
+/* field label */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(4) {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-color);
+}
+
+/* input row: "+91-" prefix + "Enter Mobile Number" field rendered as one
+   continuous bordered input. Floats avoid the inline-block whitespace gap
+   between the two separate <p> siblings. */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(5),
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(6) {
+  box-sizing: border-box;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--background-color);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* "+91-" prefix — left segment */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(5) {
+  float: left;
+  padding-right: 4px;
+  border-right: 0;
+  border-radius: 4px 0 0 4px;
+  color: var(--text-color);
+}
+
+/* mobile-number field — right segment fills remaining width (BFC) */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(6) {
+  overflow: hidden;
+  padding-left: 4px;
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
+  color: var(--text-muted);
+}
+
+/* Proceed button — full-width filled maroon CTA */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(7) {
+  clear: both;
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--brand-primary);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Login / or / Resume row */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(8),
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(9),
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(10) {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(8),
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(9) {
+  margin-right: 6px;
+}
+
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(9) {
+  color: var(--text-muted);
+}
