@@ -500,7 +500,7 @@ header nav[aria-expanded='true'] .nav-brand {
   header nav .nav-search {
     display: block;
     width: 360px;
-    margin-right: auto;
+    margin-right: 12px;
     margin-left: 0;
   }
 
