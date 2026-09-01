@@ -1,0 +1,8 @@
+{
+  "variantName": "hero",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "visualCharacteristics": { "colorScheme": "accent", "density": "spacious", "purpose": "hero", "imagePattern": "large" },
+  "contentPattern": { "structure": "image + heading + text + cta", "buttonCount": 1, "imageCount": 1 },
+  "usage": { "pagesUsing": [], "reuseCount": 0 }
+}

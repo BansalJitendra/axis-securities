@@ -1,0 +1,8 @@
+{
+  "variantName": "columns",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "visualCharacteristics": { "colorScheme": "light", "density": "comfortable", "purpose": "layout", "imagePattern": "optional" },
+  "contentPattern": { "structure": "multi-column content (text + image cells)", "buttonCount": 0, "imageCount": 1 },
+  "usage": { "pagesUsing": [], "reuseCount": 0 }
+}

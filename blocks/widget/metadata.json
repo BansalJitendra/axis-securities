@@ -1,0 +1,8 @@
+{
+  "variantName": "widget",
+  "baseBlock": "widget",
+  "version": "1.0.0",
+  "visualCharacteristics": { "colorScheme": "light", "density": "comfortable", "purpose": "interactive-showcase", "imagePattern": "mixed" },
+  "contentPattern": { "structure": "heading + interactive content (recommendations / platforms)", "buttonCount": 1, "imageCount": 0 },
+  "usage": { "pagesUsing": ["/index"], "reuseCount": 1 }
+}

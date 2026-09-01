@@ -1,0 +1,8 @@
+{
+  "variantName": "cards",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "visualCharacteristics": { "colorScheme": "light", "density": "comfortable", "purpose": "card-grid", "imagePattern": "thumbnail" },
+  "contentPattern": { "structure": "image + title + description + cta", "buttonCount": 1, "imageCount": 1 },
+  "usage": { "pagesUsing": [], "reuseCount": 0 }
+}
