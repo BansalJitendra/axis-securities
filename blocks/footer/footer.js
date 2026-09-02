@@ -30,5 +30,23 @@ export default async function decorate(block) {
     footer.append(section);
   });
 
+  // Group each heading + its following list into a single column unit so the
+  // links stay under their heading in the grid (otherwise headings and lists
+  // fill separate grid cells and drift apart).
+  const linksSection = footer.querySelector('.footer-links');
+  if (linksSection) {
+    const cols = [];
+    let current = null;
+    [...linksSection.children].forEach((el) => {
+      if (el.tagName === 'H3') {
+        current = document.createElement('div');
+        current.className = 'footer-col';
+        cols.push(current);
+      }
+      if (current) current.append(el);
+    });
+    cols.forEach((col) => linksSection.append(col));
+  }
+
   block.append(footer);
 }

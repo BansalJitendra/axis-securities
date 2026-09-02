@@ -48,11 +48,13 @@ footer .footer-brand img {
   width: auto;
 }
 
-/* primary link columns */
+/* primary link columns — each .footer-col holds one heading + its list so the
+   links stay under their heading. */
 footer .footer-links {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px 32px;
+  align-items: start;
 }
 
 footer .footer-links ul {
