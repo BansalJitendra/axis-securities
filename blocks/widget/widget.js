@@ -111,6 +111,7 @@ function decorateFeatureTabs(cell) {
   let cta = null;
   if (after.length && after[after.length - 1].querySelector('a')) {
     cta = after.pop();
+    cta.classList.add('widget-feature-cta');
   }
 
   // Group into panels, each starting at an <h3>.

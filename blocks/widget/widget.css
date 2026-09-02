@@ -143,6 +143,14 @@
 
 /* ------------------------------------------------------------------ */
 
+/* The block content sits in a white rounded card (matches the source). */
+.widget-platforms {
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+}
+
 .widget-platforms > div > div {
   display: flex;
   flex-direction: column;
@@ -169,6 +177,10 @@
 }
 
 @media (width >= 900px) {
+  .widget-platforms {
+    padding: 40px;
+  }
+
   .widget-platforms > div > div:has(.widget-platform-media) {
     flex-direction: row;
     align-items: center;
@@ -225,6 +237,18 @@
 .widget-platforms a.button:any-link {
   align-self: flex-start;
   margin-top: 12px;
+}
+
+/* Shared "Download App" CTA — right-aligned at the bottom of the card,
+   matching the source. */
+.widget-feature-cta {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.widget-platforms a.button.widget-feature-cta,
+.widget-feature-cta a.button:any-link {
+  align-self: flex-end;
 }
 
 /* Platform Features — interactive tabs (horizontal row of pill buttons that
