@@ -39,14 +39,20 @@
 .cards-features > ul {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 8px; /* room for the scrollbar without clipping cards */
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: nowrap;
   gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
 }
 
 .cards-features > ul > li {
+  flex: 0 0 260px;
+  scroll-snap-align: start;
   background-color: var(--background-color);
   border-radius: 16px;
   padding: 24px;
@@ -101,14 +107,14 @@
   color: var(--text-color);
 }
 
-/* --- desktop: multi-column card row (source shows 4-up carousel) --- */
+/* --- desktop: the carousel row is capped to the content width; ~4 cards
+   are visible at once and the rest scroll (matches the source). --- */
 @media (width >= 900px) {
   .cards-features {
     padding: 48px 24px;
   }
 
   .cards-features > ul {
-    grid-template-columns: repeat(4, 1fr);
     max-width: 1200px;
   }
 
