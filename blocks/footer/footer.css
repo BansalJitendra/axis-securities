@@ -1,10 +1,10 @@
-/* Axis Direct footer — matched to https://www.axisdirect.in/ */
+/* Axis Direct footer — matched to https://www.axisdirect.in/
+   The whole footer sits on the brand maroon with white text. */
 footer {
-  background-color: #fff;
-  color: var(--text-color, #282828);
+  background-color: var(--brand-primary, #97144d);
+  color: #fff;
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-xs, 14px);
-  border-top: 1px solid var(--border-color, #e2e2e2);
 }
 
 footer .footer > div {
@@ -18,7 +18,7 @@ footer .footer p {
 }
 
 footer .footer a:any-link {
-  color: var(--text-color, #282828);
+  color: #fff;
   text-decoration: none;
   background: none;
   border: 0;
@@ -27,13 +27,13 @@ footer .footer a:any-link {
 }
 
 footer .footer a:hover {
-  color: var(--brand-accent, #ed1164);
+  color: #fff;
   text-decoration: underline;
 }
 
 footer .footer h3 {
   margin: 0 0 12px;
-  color: var(--brand-primary, #97144d);
+  color: #fff;
   font-size: 15px;
   font-weight: 700;
 }
@@ -91,11 +91,10 @@ footer .footer-stocks-index li {
   font-weight: 700;
 }
 
-/* legal / regulatory disclosures */
+/* legal / regulatory disclosures — kept on the maroon, slightly muted white */
 footer .footer-legal {
-  background: var(--grey-bg, #f9f9f9);
-  border-top: 1px solid var(--border-color, #e2e2e2);
-  color: #575757;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  color: rgb(255 255 255 / 85%);
   font-size: 12px;
   line-height: 1.6;
 }
@@ -115,14 +114,14 @@ footer .footer-legal li {
 
 /* bottom policy bar + copyright */
 footer .footer-bottom {
-  border-top: 1px solid var(--border-color, #e2e2e2);
-  color: #575757;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  color: rgb(255 255 255 / 85%);
   font-size: 12px;
 }
 
 footer .footer-bottom p:last-child {
   margin-top: 8px;
-  color: var(--text-color, #282828);
+  color: #fff;
 }
 
 @media (width >= 600px) {
