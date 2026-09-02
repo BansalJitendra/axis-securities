@@ -147,14 +147,17 @@ function decorateFeatureTabs(cell) {
   const activate = (idx) => {
     tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
     panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+    // Move the shared "Download App" CTA inside the active panel (grey box),
+    // at its bottom — matching the source.
+    if (cta && panels[idx]) panels[idx].appendChild(cta);
   };
   tabs.forEach((tab, i) => tab.addEventListener('click', () => activate(i)));
   activate(0);
 
-  // Reassemble: heading, tab row, panels, shared CTA.
+  // Reassemble: heading, tab row, panels (the CTA now lives inside the active
+  // panel, so it is not appended separately).
   featuresHeading.after(tabRow);
   tabRow.after(panelWrap);
-  if (cta) panelWrap.after(cta);
 }
 
 /**
