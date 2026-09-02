@@ -285,11 +285,20 @@
   color: #fff;
 }
 
-/* Only the active feature panel is shown. */
+/* Only the active feature panel is shown. It sits in a light-grey rounded
+   box (matches the source: #f9f9f9, 16px radius, 24px padding). */
 .widget-feature-panel {
   display: none;
 }
 
 .widget-feature-panel.active {
   display: block;
+  background: #f9f9f9;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* The heading inside the panel loses its top margin so it hugs the box. */
+.widget-feature-panel.active h3 {
+  margin-top: 0;
 }
