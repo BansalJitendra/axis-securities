@@ -339,12 +339,14 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) {
 @media (width >= 900px) {
   main > .section.columns-stats-container.cards-segments-container.cards-features-container {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 400px;
-    column-gap: 40px;
+    grid-template-columns: minmax(0, 1fr) 344px;
+    column-gap: 24px;
     align-items: start;
-    max-width: 1264px;
+
+    /* wider container so the left block column matches the source's ~1032px */
+    max-width: 1440px;
     margin-inline: auto;
-    padding: 0 32px;
+    padding: 0 24px;
   }
 
   /* the block wrappers no longer need their own max-width/centering — the grid
