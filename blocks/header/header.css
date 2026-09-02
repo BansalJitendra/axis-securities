@@ -471,6 +471,32 @@ header nav[aria-expanded='true'] .nav-brand {
     width: 189px;
     height: 44px;
     padding-right: 8px;
+
+    /* the brand sits in the maroon top row but its banner extends down through
+       the white tools row (below) with a diagonal right edge (matches the
+       source). The banner is a pseudo-element behind the logo. */
+    position: relative;
+    z-index: 2;
+  }
+
+  /* maroon banner behind the logo: reaches the page's left edge, spans both
+     rows, and is cut diagonally on the right (the Axis pennant shape). */
+  header nav .nav-brand::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -47px; /* cancel nav's 47px left padding to touch the page edge */
+    width: 236px;
+    height: 106px; /* maroon 44px + white tools row 62px */
+    background: var(--nav-maroon);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 44px) 100%, 0 100%);
+    z-index: -1;
+  }
+
+  /* keep the logo above the banner */
+  header nav .nav-brand .nav-brand-logo {
+    position: relative;
+    z-index: 1;
   }
 
   header nav .nav-sections {
