@@ -95,17 +95,28 @@ function decoratePlatforms(block) {
   const cell = findContentCell(block, /Investor App/i);
   if (!cell) return;
 
+  const tabs = [];
   [...cell.children].forEach((el) => {
     if (el.tagName === 'P') {
       const text = el.textContent.trim();
       if (/^(Investor App|Trader App|Trader Pro Terminal)$/.test(text)) {
         el.classList.add('widget-platform-tab');
+        tabs.push(el);
       }
       // Remove empty (media) links so they don't render as empty buttons.
       const a = el.querySelector('a');
       if (a && !a.textContent.trim() && !a.querySelector('img')) el.remove();
     }
   });
+
+  // Group the tab pills into a single horizontal row (they render as a
+  // stacked column otherwise). Insert the row where the first tab was.
+  if (tabs.length) {
+    const tabRow = document.createElement('div');
+    tabRow.className = 'widget-platform-tabs';
+    tabs[0].before(tabRow);
+    tabs.forEach((t) => tabRow.appendChild(t));
+  }
 }
 
 /**

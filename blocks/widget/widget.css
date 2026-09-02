@@ -149,9 +149,16 @@
   gap: 8px;
 }
 
+/* Platform tabs — a horizontal row of pill buttons (matches the source). */
+.widget-platform-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
 /* Platform tabs — pill buttons (active state uses brand-primary border) */
 .widget-platform-tab {
-  align-self: flex-start;
   margin: 0;
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -159,6 +166,7 @@
   font-weight: 700;
   font-size: var(--body-font-size-s); /* ~19.8px source; 16px keeps rhythm */
   color: var(--text-color);
+  white-space: nowrap;
 }
 
 .widget-platforms h2 {
