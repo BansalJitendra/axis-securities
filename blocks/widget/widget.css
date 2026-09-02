@@ -149,6 +149,42 @@
   gap: 8px;
 }
 
+/* Two-column layout — promo video on the left, tabs + features on the right
+   (matches the source). Stacks on mobile. */
+.widget-platform-media {
+  width: 100%;
+}
+
+.widget-platform-media video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.widget-platform-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (width >= 900px) {
+  .widget-platforms > div > div:has(.widget-platform-media) {
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .widget-platform-media {
+    flex: 0 0 45%;
+    max-width: 500px;
+  }
+
+  .widget-platform-content {
+    flex: 1 1 auto;
+  }
+}
+
 /* Platform tabs — a horizontal row of pill buttons (matches the source). */
 .widget-platform-tabs {
   display: flex;

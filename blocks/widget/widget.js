@@ -165,6 +165,18 @@ function decoratePlatforms(block) {
   const cell = findContentCell(block, /Investor App/i);
   if (!cell) return;
 
+  // Capture the platform media (an authored .webm/.mp4 link) so we can render
+  // it as an autoplaying video in the left column, matching the source's
+  // two-column layout (video left, tabs + features right).
+  let mediaUrl = null;
+  [...cell.querySelectorAll('a')].forEach((a) => {
+    const href = a.getAttribute('href') || '';
+    if (/\.(webm|mp4)(\?|#|$)/i.test(href) && !a.textContent.trim()) {
+      mediaUrl = href;
+      (a.closest('p') || a).remove();
+    }
+  });
+
   const tabs = [];
   [...cell.children].forEach((el) => {
     if (el.tagName === 'P') {
@@ -173,7 +185,8 @@ function decoratePlatforms(block) {
         el.classList.add('widget-platform-tab');
         tabs.push(el);
       }
-      // Remove empty (media) links so they don't render as empty buttons.
+      // Remove any remaining empty (media) links so they don't render as
+      // empty buttons.
       const a = el.querySelector('a');
       if (a && !a.textContent.trim() && !a.querySelector('img')) el.remove();
     }
@@ -189,6 +202,27 @@ function decoratePlatforms(block) {
   }
 
   decorateFeatureTabs(cell);
+
+  // Split into two columns — media on the left, all the content on the right —
+  // matching the source. Only when a media URL was found.
+  if (mediaUrl) {
+    const media = document.createElement('div');
+    media.className = 'widget-platform-media';
+    const video = document.createElement('video');
+    video.setAttribute('src', mediaUrl);
+    video.setAttribute('autoplay', '');
+    video.setAttribute('loop', '');
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.muted = true;
+    media.appendChild(video);
+
+    const content = document.createElement('div');
+    content.className = 'widget-platform-content';
+    [...cell.children].forEach((c) => content.appendChild(c));
+
+    cell.append(media, content);
+  }
 }
 
 /**
