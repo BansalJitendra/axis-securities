@@ -44,7 +44,10 @@
   text-align: left;
 }
 
-.hero-carousel-text h1 {
+/* Title — the <h1> (slide 1) and the first <p> (slides 2-5) are the same
+   large heading on the source: ~30px mobile / weight 700 / #282828. */
+.hero-carousel-text h1,
+.hero-carousel-text > p:first-child {
   margin: 0;
   font-family: var(--heading-font-family);
   font-weight: 700;
@@ -53,33 +56,15 @@
   color: var(--text-color);
 }
 
-/* Promo subtitle (slides 2-5 use a <p> instead of <h1>). */
-.hero-carousel-text > p:first-child {
-  margin: 0;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 1.3;
-  color: #575757;
-}
-
+/* Description subtitle (the middle paragraph on every slide) — bold, muted
+   grey, ~20px (source: 19.8px / 700 / #575757). */
 /* stylelint-disable-next-line no-descending-specificity */
-.hero-carousel-text p {
+.hero-carousel-text > p:not(:first-child, :last-child) {
   margin: 16px 0 0;
   font-weight: 700;
   font-size: 20px;
   line-height: 1.3;
   color: #575757;
-}
-
-/* Description subtitle (the middle paragraph on every slide) — regular weight,
-   muted, smaller than the bold title above it. */
-/* stylelint-disable-next-line no-descending-specificity */
-.hero-carousel-text > p:not(:first-child, :last-child) {
-  margin-top: 12px;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #616161;
 }
 
 /* CTA button */
@@ -228,14 +213,16 @@
     flex: 1 1 60%;
   }
 
-  .hero-carousel-text h1 {
+  /* Title (h1 + first-p on promo slides) grows to the source's 46px. */
+  .hero-carousel-text h1,
+  .hero-carousel-text > p:first-child {
     font-size: 46px;
     line-height: 1.12;
   }
 
-  .hero-carousel-text > p:first-child,
+  /* Description stays ~20px on desktop. */
   /* stylelint-disable-next-line no-descending-specificity */
-  .hero-carousel-text p {
+  .hero-carousel-text > p:not(:first-child, :last-child) {
     font-size: 20px;
   }
 
