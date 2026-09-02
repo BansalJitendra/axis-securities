@@ -1,0 +1,11 @@
+{
+  "project": "Axis Direct",
+  "plugins": [
+    {
+      "id": "library",
+      "title": "Library",
+      "environments": ["edit"],
+      "url": "https://da.live/app/library?owner=bansaljitendra&repo=axis-securities&ref=main"
+    }
+  ]
+}
