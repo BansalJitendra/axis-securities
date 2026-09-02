@@ -20,6 +20,15 @@ export default function decorate(block) {
       cell.classList.add('hero-carousel-cell');
       // Pull the image (first <p> holding a <picture>) into its own column.
       const picP = [...cell.children].find((el) => el.querySelector && el.querySelector('picture'));
+      // The first slide's image is the LCP element — load it eagerly with high
+      // priority instead of lazily (the default from the import pipeline).
+      if (i === 0) {
+        const heroImg = picP && picP.querySelector('img');
+        if (heroImg) {
+          heroImg.setAttribute('loading', 'eager');
+          heroImg.setAttribute('fetchpriority', 'high');
+        }
+      }
       const imageCol = document.createElement('div');
       imageCol.className = 'hero-carousel-image';
       const textCol = document.createElement('div');
