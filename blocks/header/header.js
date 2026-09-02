@@ -76,6 +76,64 @@ function decorateDropItem(li, nav) {
   }
 }
 
+/* Representative market snapshot for the scrolling ticker. The source shows a
+   live feed above the nav; the migrated page is static, so this is a fixed
+   snapshot rendered as a marquee to match the look. */
+const TICKER_STOCKS = [
+  ['BAJFINANCE', '1,057.80', 0.37], ['HCLTECH', '1,334.00', -1.29],
+  ['HINDUNILVR', '1,968.00', -1.34], ['EICHERMOT', '7,608.00', -4.54],
+  ['APOLLOHOSP', '8,687.00', -0.78], ['TCS', '2,338.80', -1.27],
+  ['NESTLEIND', '1,418.70', -1.36], ['MAXHEALTH', '991.50', -1.15],
+  ['NTPC', '329.20', 0.52], ['SBIN', '1,020.90', -1.31],
+  ['TATACONSUM', '1,017.10', -1.30], ['TATASTEEL', '182.84', -0.67],
+  ['POWERGRID', '267.40', 1.08], ['ICICIBANK', '1,425.50', -0.87],
+  ['DRREDDY', '1,163.80', -0.61], ['TECHM', '1,617.80', -1.23],
+  ['ONGC', '237.11', 0.28], ['JIOFIN', '236.10', 0.11],
+  ['WIPRO', '177.56', -2.28], ['INFY', '1,133.30', -1.96],
+  ['BAJAJFINSV', '1,977.20', 0.26], ['KOTAKBANK', '422.40', -0.61],
+  ['SBILIFE', '1,729.20', -0.58], ['BAJAJ-AUTO', '12,030.00', -2.68],
+  ['LT', '3,991.30', 0.28], ['BEL', '405.05', -1.50],
+  ['SENSEX', '76,518.39', -0.55], ['ETERNAL', '327.00', -0.23],
+  ['ASIANPAINT', '2,520.80', -2.12], ['TITAN', '5,038.00', -0.24],
+  ['AXISBANK', '1,258.90', 0.07], ['JSWSTEEL', '1,301.70', -0.90],
+  ['INDIGO', '4,988.50', -1.26], ['M&M', '3,175.00', -2.58],
+  ['ULTRACEMCO', '11,308.00', -0.81], ['RELIANCE', '1,313.10', 0.31],
+  ['GRASIM', '3,271.10', -1.03], ['HINDALCO', '1,004.40', -0.99],
+  ['TRENT', '2,858.90', 0.14], ['NIFTY', '23,892.20', -0.68],
+];
+
+/**
+ * Build the scrolling market-price ticker shown above the nav (matches the
+ * source). Static snapshot; the row is duplicated so the marquee loops without
+ * a visible gap.
+ * @returns {Element} ticker wrapper
+ */
+function buildTicker() {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nav-ticker';
+
+  const track = document.createElement('div');
+  track.className = 'nav-ticker-track';
+
+  const buildItem = (sym, price, pct) => {
+    const item = document.createElement('span');
+    item.className = 'nav-ticker-item';
+    const up = pct >= 0;
+    item.innerHTML = `<span class="nav-ticker-sym">${sym}</span>`
+      + `<span class="nav-ticker-price">${price}</span>`
+      + `<span class="nav-ticker-chg ${up ? 'up' : 'down'}">`
+      + `${up ? '+' : ''}${pct.toFixed(2)}%</span>`;
+    return item;
+  };
+
+  // Two copies of the list back-to-back for a seamless loop.
+  for (let copy = 0; copy < 2; copy += 1) {
+    TICKER_STOCKS.forEach(([sym, price, pct]) => track.append(buildItem(sym, price, pct)));
+  }
+  wrapper.append(track);
+  return wrapper;
+}
+
 /**
  * Build the search form. Form controls must be created in JS, not the fragment.
  * @returns {Element} search wrapper
@@ -198,5 +256,7 @@ export default async function decorate(block) {
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
+  // Market-price ticker sits above the nav (matches the source).
+  block.append(buildTicker());
   block.append(navWrapper);
 }

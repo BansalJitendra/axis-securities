@@ -4,6 +4,68 @@
    Mobile-first: base = mobile drawer; @media (width >= 900px) = desktop rows.
    =================================================================== */
 
+/* ---- market-price ticker (scrolling bar above the nav) ---- */
+header .nav-ticker {
+  overflow: hidden;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid var(--border-color, #e2e2e2);
+}
+
+header .nav-ticker-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+
+  /* two copies of the list; translate by half to loop seamlessly */
+  animation: nav-ticker-scroll 80s linear infinite;
+}
+
+header .nav-ticker:hover .nav-ticker-track {
+  animation-play-state: paused;
+}
+
+header .nav-ticker-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: var(--body-font-size-xs, 14px);
+  line-height: 1.2;
+}
+
+header .nav-ticker-sym {
+  font-weight: 700;
+  color: var(--text-color, #282828);
+}
+
+header .nav-ticker-price {
+  color: var(--text-color, #282828);
+}
+
+header .nav-ticker-chg {
+  font-weight: 700;
+}
+
+header .nav-ticker-chg.up {
+  color: rgb(39 136 41);
+}
+
+header .nav-ticker-chg.down {
+  color: rgb(235 0 0);
+}
+
+@keyframes nav-ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header .nav-ticker-track {
+    animation: none;
+  }
+}
+
 /* ---- shared tokens ---- */
 header .nav-wrapper {
   --nav-maroon: var(--brand-primary, #97144d);
