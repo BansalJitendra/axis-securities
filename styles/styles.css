@@ -286,8 +286,9 @@ main img {
 }
 
 /* The whole page content sits in a centered ~1600px band (matches the source),
-   so full-bleed section backgrounds and the footer stop at the band edge
-   instead of spanning the full viewport. */
+   so the header (nav + ticker), full-bleed section backgrounds and the footer
+   stop at the band edge instead of spanning the full viewport. */
+header,
 main,
 footer {
   max-width: 1600px;
