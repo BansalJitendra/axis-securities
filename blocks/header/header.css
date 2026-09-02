@@ -27,7 +27,7 @@ header nav {
   align-items: center;
   gap: 0;
   margin: auto;
-  max-width: 1204px;
+  max-width: 1600px;
   min-height: 56px;
 
   /* mobile: no horizontal padding so the drawer list is flush to the viewport
