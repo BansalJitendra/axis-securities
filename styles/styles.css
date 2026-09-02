@@ -332,11 +332,43 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) {
   color: var(--text-color);
 }
 
-/* Desktop: right-align the card and make it sticky so it stays visible while
-   scrolling down the section (matches the source hero account panel). */
+/* Desktop: the section holding the account card + the stat/segment/feature
+   blocks becomes a two-column grid — blocks flow in the left column, the card
+   sits in a right column and sticks while scrolling (matches the source, where
+   the account panel stays on the right without hiding the block content). */
 @media (width >= 900px) {
+  main > .section.columns-stats-container.cards-segments-container.cards-features-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    column-gap: 40px;
+    align-items: start;
+    max-width: 1264px;
+    margin-inline: auto;
+    padding: 0 32px;
+  }
+
+  /* the block wrappers no longer need their own max-width/centering — the grid
+     column handles width; reset the base `.section > div` auto-centering. */
+  main > .section.columns-stats-container.cards-segments-container.cards-features-container > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* every block wrapper stays in the left column */
+  main > .section.cards-features-container > .columns-stats-wrapper,
+  main > .section.cards-features-container > .cards-segments-wrapper,
+  main > .section.cards-features-container > .widget-wrapper,
+  main > .section.cards-features-container > .cards-features-wrapper {
+    grid-column: 1;
+  }
+
+  /* the account card occupies the right column, spanning all rows, and sticks */
   main .section > .default-content-wrapper:has(> h2#open-your-account) {
-    margin: 0 0 40px auto;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    max-width: none;
+    margin: 0;
     position: sticky;
     top: 90px;
     z-index: 5;
