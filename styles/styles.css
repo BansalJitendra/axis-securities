@@ -332,6 +332,17 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) {
   color: var(--text-color);
 }
 
+/* Desktop: right-align the card and make it sticky so it stays visible while
+   scrolling down the section (matches the source hero account panel). */
+@media (width >= 900px) {
+  main .section > .default-content-wrapper:has(> h2#open-your-account) {
+    margin: 0 0 40px auto;
+    position: sticky;
+    top: 90px;
+    z-index: 5;
+  }
+}
+
 /* reset default heading/paragraph margins inside the card */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > * {
   margin: 0;
