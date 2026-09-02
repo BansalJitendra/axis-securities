@@ -1,5 +1,6 @@
 {
   "project": "Axis Direct",
+  "editUrlPattern": "https://da.live/canvas#/bansaljitendra/axis-securities/index",
   "plugins": [
     {
       "id": "library",
