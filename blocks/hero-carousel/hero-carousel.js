@@ -22,12 +22,23 @@ export default function decorate(block) {
       const picP = [...cell.children].find((el) => el.querySelector && el.querySelector('picture'));
       // The first slide's image is the LCP element — load it eagerly with high
       // priority instead of lazily (the default from the import pipeline).
-      if (i === 0) {
-        const heroImg = picP && picP.querySelector('img');
+      if (i === 0 && picP) {
+        const heroImg = picP.querySelector('img');
         if (heroImg) {
           heroImg.setAttribute('loading', 'eager');
           heroImg.setAttribute('fetchpriority', 'high');
         }
+        // The hero image only ever renders in a ~700px column (max ~960px on
+        // the widest band), but the default EDS breakpoint requests width=2000.
+        // Downsize the desktop rendition to cut the LCP image download without
+        // any visible quality loss on 1x/2x displays.
+        picP.querySelectorAll('source[media], img[src]').forEach((el) => {
+          const attr = el.tagName === 'SOURCE' ? 'srcset' : 'src';
+          const val = el.getAttribute(attr);
+          if (val && val.includes('width=2000')) {
+            el.setAttribute(attr, val.replace('width=2000', 'width=1200'));
+          }
+        });
       }
       const imageCol = document.createElement('div');
       imageCol.className = 'hero-carousel-image';
