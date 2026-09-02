@@ -52,27 +52,24 @@
   margin-right: 8px;
 }
 
-/* Card grid — source cards are ~216px wide, laid out in a row/carousel */
+/* Card carousel — a single horizontal, scroll-snapping row of tiles
+   (matches the source, which scrolls the cards rather than wrapping them). */
 .widget-reco-cards {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: nowrap;
   gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 8px; /* room for the scrollbar without clipping cards */
+  scrollbar-width: thin;
 }
 
-@media (width >= 600px) {
-  .widget-reco-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (width >= 900px) {
-  .widget-reco-cards {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Card — teal border, 16px radius, 16px padding (from source) */
+/* Card — teal border, 16px radius, 16px padding (from source); fixed width so
+   the row scrolls horizontally like the source carousel. */
 .widget-reco-card {
+  flex: 0 0 216px;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: 6px;
