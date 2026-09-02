@@ -11,7 +11,9 @@
       "id": "media-library",
       "title": "Media Library",
       "environments": ["edit"],
-      "url": "https://da.live/app/media?owner=bansaljitendra&repo=axis-securities&ref=main"
+      "url": "https://da.live/nx/public/plugins/media-library/media-library.html",
+      "icon": "https://da.live/blocks/edit/img/Smock_Images_18_N.svg",
+      "experience": "fullsize-dialog"
     }
   ]
 }
