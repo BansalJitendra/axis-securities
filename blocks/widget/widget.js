@@ -87,6 +87,76 @@ function decorateRecommendations(block) {
 }
 
 /**
+ * Builds the interactive "Platform Features" tab set. Each feature is authored
+ * as an <h3> (the tab label) followed by a <p> (its description). We turn the
+ * <h3>s into a horizontal row of clickable tabs and show one panel at a time,
+ * matching the source. A trailing "Download App" link is shared below.
+ * @param {Element} cell The platforms content cell
+ */
+function decorateFeatureTabs(cell) {
+  const featuresHeading = [...cell.children]
+    .find((el) => el.tagName === 'H2' && /platform features/i.test(el.textContent));
+  if (!featuresHeading) return;
+
+  // Everything after the "Platform Features" heading: h3 = new panel, other
+  // nodes belong to the current panel. A trailing link is the shared CTA.
+  const after = [];
+  let sib = featuresHeading.nextElementSibling;
+  while (sib) {
+    after.push(sib);
+    sib = sib.nextElementSibling;
+  }
+
+  // Pull off a trailing shared CTA (the "Download App" link paragraph).
+  let cta = null;
+  if (after.length && after[after.length - 1].querySelector('a')) {
+    cta = after.pop();
+  }
+
+  // Group into panels, each starting at an <h3>.
+  const panels = [];
+  let current = null;
+  after.forEach((el) => {
+    if (el.tagName === 'H3') {
+      current = document.createElement('div');
+      current.className = 'widget-feature-panel';
+      panels.push(current);
+    }
+    if (current) current.appendChild(el);
+  });
+  if (!panels.length) return;
+
+  // Build the tab row from each panel's heading text.
+  const tabRow = document.createElement('div');
+  tabRow.className = 'widget-feature-tabs';
+  const tabs = panels.map((panel, i) => {
+    const h3 = panel.querySelector('h3');
+    const tab = document.createElement('button');
+    tab.type = 'button';
+    tab.className = 'widget-feature-tab';
+    tab.textContent = h3 ? h3.textContent.trim() : `Tab ${i + 1}`;
+    tabRow.appendChild(tab);
+    return tab;
+  });
+
+  const panelWrap = document.createElement('div');
+  panelWrap.className = 'widget-feature-panels';
+  panels.forEach((p) => panelWrap.appendChild(p));
+
+  const activate = (idx) => {
+    tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+    panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+  };
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => activate(i)));
+  activate(0);
+
+  // Reassemble: heading, tab row, panels, shared CTA.
+  featuresHeading.after(tabRow);
+  tabRow.after(panelWrap);
+  if (cta) panelWrap.after(cta);
+}
+
+/**
  * Decorates the platforms showcase: marks tab paragraphs and drops the
  * empty media link that would otherwise render as an empty button.
  * @param {Element} block
@@ -117,6 +187,8 @@ function decoratePlatforms(block) {
     tabs[0].before(tabRow);
     tabs.forEach((t) => tabRow.appendChild(t));
   }
+
+  decorateFeatureTabs(cell);
 }
 
 /**

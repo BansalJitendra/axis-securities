@@ -190,3 +190,46 @@
   align-self: flex-start;
   margin-top: 12px;
 }
+
+/* Platform Features — interactive tabs (horizontal row of pill buttons that
+   switch the panel below, matching the source). */
+.widget-feature-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0 20px;
+}
+
+.widget-feature-tab {
+  margin: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 10px 20px;
+  background: var(--background-color);
+  font-family: var(--body-font-family);
+  font-weight: 700;
+  font-size: var(--body-font-size-s);
+  color: var(--text-color);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.widget-feature-tab:hover {
+  border-color: var(--brand-primary);
+}
+
+.widget-feature-tab.active {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+/* Only the active feature panel is shown. */
+.widget-feature-panel {
+  display: none;
+}
+
+.widget-feature-panel.active {
+  display: block;
+}
