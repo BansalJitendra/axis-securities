@@ -267,147 +267,235 @@ function decorateRecommendations(block) {
   if (moreEl) cell.append(moreEl);
 }
 
+const VIDEO_RE = /\.(webm|mp4)(\?|#|$)/i;
+
 /**
- * Builds the interactive "Platform Features" tab set. Each feature is authored
- * as an <h3> (the tab label) followed by a <p> (its description). We turn the
- * <h3>s into a horizontal row of clickable tabs and show one panel at a time,
- * matching the source. A trailing "Download App" link is shared below.
- * @param {Element} cell The platforms content cell
+ * Wires a set of tab buttons to panels (one active at a time).
+ * @param {Element[]} tabs
+ * @param {Element[]} panels
+ * @param {(i: number) => void} [onChange]
  */
-function decorateFeatureTabs(cell) {
-  const featuresHeading = [...cell.children]
-    .find((el) => el.tagName === 'H2' && /platform features/i.test(el.textContent));
-  if (!featuresHeading) return;
-
-  // Everything after the "Platform Features" heading: h3 = new panel, other
-  // nodes belong to the current panel. A trailing link is the shared CTA.
-  const after = [];
-  let sib = featuresHeading.nextElementSibling;
-  while (sib) {
-    after.push(sib);
-    sib = sib.nextElementSibling;
-  }
-
-  // Pull off a trailing shared CTA (the "Download App" link paragraph).
-  let cta = null;
-  if (after.length && after[after.length - 1].querySelector('a')) {
-    cta = after.pop();
-    cta.classList.add('widget-feature-cta');
-  }
-
-  // Group into panels, each starting at an <h3>.
-  const panels = [];
-  let current = null;
-  after.forEach((el) => {
-    if (el.tagName === 'H3') {
-      current = document.createElement('div');
-      current.className = 'widget-feature-panel';
-      panels.push(current);
-    }
-    if (current) current.appendChild(el);
-  });
-  if (!panels.length) return;
-
-  // Build the tab row from each panel's heading text.
-  const tabRow = document.createElement('div');
-  tabRow.className = 'widget-feature-tabs';
-  const tabs = panels.map((panel, i) => {
-    const h3 = panel.querySelector('h3');
-    const tab = document.createElement('button');
-    tab.type = 'button';
-    tab.className = 'widget-feature-tab';
-    tab.textContent = h3 ? h3.textContent.trim() : `Tab ${i + 1}`;
-    tabRow.appendChild(tab);
-    return tab;
-  });
-
-  const panelWrap = document.createElement('div');
-  panelWrap.className = 'widget-feature-panels';
-  panels.forEach((p) => panelWrap.appendChild(p));
-
+function wireTabs(tabs, panels, onChange) {
   const activate = (idx) => {
-    tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
-    panels.forEach((p, i) => p.classList.toggle('active', i === idx));
-    // Move the shared "Download App" CTA inside the active panel (grey box),
-    // at its bottom — matching the source.
-    if (cta && panels[idx]) panels[idx].appendChild(cta);
+    tabs.forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+      t.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+      t.tabIndex = i === idx ? 0 : -1;
+    });
+    panels.forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+      p.hidden = i !== idx;
+    });
+    if (onChange) onChange(idx);
   };
-  tabs.forEach((tab, i) => tab.addEventListener('click', () => activate(i)));
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => activate(i));
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const next = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      activate(next);
+      tabs[next].focus();
+    });
+  });
   activate(0);
-
-  // Reassemble: heading, tab row, panels (the CTA now lives inside the active
-  // panel, so it is not appended separately).
-  featuresHeading.after(tabRow);
-  tabRow.after(panelWrap);
+  return activate;
 }
 
 /**
- * Decorates the platforms showcase: marks tab paragraphs and drops the
- * empty media link that would otherwise render as an empty button.
+ * Media for one feature: a .webm/.mp4 link becomes a lazily-loaded looping
+ * video; a picture is used as-is.
+ * @param {Element} node authored paragraph holding the link or picture
+ * @returns {Element|null}
+ */
+function buildFeatureMedia(node) {
+  const a = node.querySelector('a[href]');
+  if (a && VIDEO_RE.test(a.getAttribute('href'))) {
+    const video = createEl('video', 'widget-platform-video');
+    video.dataset.src = a.getAttribute('href');
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = 'none';
+    ['muted', 'loop', 'playsinline'].forEach((attr) => video.setAttribute(attr, ''));
+    video.setAttribute('aria-hidden', 'true');
+    return video;
+  }
+  return node.querySelector('picture') || node.querySelector('img');
+}
+
+/** Play the active feature's video (loading it on first use); pause the rest. */
+function syncVideos(mediaItems, activeIdx) {
+  mediaItems.forEach((m, i) => {
+    if (!m || m.tagName !== 'VIDEO') return;
+    if (i === activeIdx) {
+      if (!m.src && m.dataset.src) m.src = m.dataset.src;
+      m.play().catch(() => {});
+    } else {
+      m.pause();
+    }
+  });
+}
+
+/**
+ * Builds one platform pane: media column + "Platform Features" column with
+ * feature pill tabs and the active feature's description card + CTA.
+ * Authored row: <h3>platform</h3>, then per feature <h4>label</h4>, media,
+ * <p>description</p>; a trailing link paragraph is the platform CTA.
+ * @param {Element} cell platform row cell
+ * @param {Element|null} featuresHeading shared "Platform Features" heading
+ * @param {string} id unique id prefix
+ */
+function buildPlatformPane(cell, featuresHeading, id) {
+  const kids = [...cell.children];
+  const nameEl = kids.find((k) => k.tagName === 'H3');
+  const name = nameEl ? nameEl.textContent.trim() : '';
+
+  // Trailing CTA: last paragraph holding a non-video link.
+  let cta = null;
+  const last = kids[kids.length - 1];
+  const lastLink = last && last.querySelector('a[href]');
+  if (lastLink && !VIDEO_RE.test(lastLink.getAttribute('href'))) cta = kids.pop();
+
+  // Features: <h4> starts a feature; media + description follow.
+  const features = [];
+  kids.forEach((k) => {
+    if (k === nameEl) return;
+    if (k.tagName === 'H4') {
+      features.push({ label: k, media: null, desc: [] });
+      return;
+    }
+    const f = features[features.length - 1];
+    if (!f) return;
+    if (!f.media && (k.querySelector('picture, img') || (k.querySelector('a[href]') && VIDEO_RE.test(k.querySelector('a[href]').getAttribute('href'))))) {
+      f.media = buildFeatureMedia(k);
+    } else {
+      f.desc.push(k);
+    }
+  });
+
+  const pane = createEl('div', 'widget-platform-pane');
+  pane.id = `${id}-panel`;
+  pane.setAttribute('role', 'tabpanel');
+
+  const media = createEl('div', 'widget-platform-media');
+  const mediaItems = features.map((f) => {
+    const slot = createEl('div', 'widget-platform-media-item');
+    if (f.media) slot.append(f.media);
+    media.append(slot);
+    return f.media;
+  });
+
+  const content = createEl('div', 'widget-platform-content');
+  if (featuresHeading) content.append(featuresHeading.cloneNode(true));
+
+  const featureTabs = createEl('div', 'widget-feature-tabs');
+  featureTabs.setAttribute('role', 'tablist');
+  featureTabs.setAttribute('aria-label', `${name} features`);
+  const cards = createEl('div', 'widget-feature-panels');
+  const tabs = features.map((f, i) => {
+    const tab = createEl('button', 'widget-feature-tab', f.label.textContent.trim());
+    tab.type = 'button';
+    tab.id = `${id}-f${i}`;
+    tab.setAttribute('role', 'tab');
+    featureTabs.append(tab);
+
+    const card = createEl('div', 'widget-feature-panel');
+    card.setAttribute('role', 'tabpanel');
+    card.setAttribute('aria-labelledby', tab.id);
+    f.label.className = 'widget-feature-title';
+    card.append(f.label, ...f.desc);
+    if (cta) {
+      const c = cta.cloneNode(true);
+      c.className = 'widget-feature-cta';
+      card.append(c);
+    }
+    cards.append(card);
+    return tab;
+  });
+  content.append(featureTabs, cards);
+
+  const mediaSlots = [...media.children];
+  const activateFeature = wireTabs(tabs, [...cards.children], (idx) => {
+    mediaSlots.forEach((m, i) => m.classList.toggle('active', i === idx));
+    if (pane.classList.contains('active') && pane.closest('.widget-platforms.in-view')) syncVideos(mediaItems, idx);
+    pane.dataset.activeFeature = idx;
+  });
+
+  pane.append(media, content);
+  return {
+    name, pane, mediaItems, activateFeature,
+  };
+}
+
+/**
+ * Decorates the platforms showcase like the source: centred title, platform
+ * tabs (Investor App / Trader App / Trader Pro Terminal), and per platform a
+ * media column beside "Platform Features" pill tabs + description card.
+ * Authored rows: [title h2 + "Platform Features" h2], then one row per platform.
  * @param {Element} block
  */
 function decoratePlatforms(block) {
-  const cell = findContentCell(block, /Investor App/i);
-  if (!cell) return;
+  const rows = [...block.children];
+  const headRow = rows[0];
+  const platformRows = rows.slice(1).filter((r) => r.querySelector('h3'));
+  if (!headRow || !platformRows.length) return;
 
-  // Capture the platform media (an authored .webm/.mp4 link) so we can render
-  // it as an autoplaying video in the left column, matching the source's
-  // two-column layout (video left, tabs + features right).
-  let mediaUrl = null;
-  [...cell.querySelectorAll('a')].forEach((a) => {
-    const href = a.getAttribute('href') || '';
-    if (/\.(webm|mp4)(\?|#|$)/i.test(href) && !a.textContent.trim()) {
-      mediaUrl = href;
-      (a.closest('p') || a).remove();
-    }
+  const headCell = headRow.querySelector(':scope > div') || headRow;
+  headRow.classList.add('widget-platforms-head');
+  const headings = [...headCell.querySelectorAll('h2')];
+  const featuresHeading = headings.length > 1 ? headings[headings.length - 1] : null;
+  if (featuresHeading) {
+    featuresHeading.remove();
+    featuresHeading.removeAttribute('id'); // cloned into every pane
+    featuresHeading.classList.add('widget-features-heading');
+  }
+
+  const uid = `widget-platforms-${[...document.querySelectorAll('.widget-platforms')].indexOf(block)}`;
+  const panes = platformRows.map((row, i) => buildPlatformPane(row.querySelector(':scope > div') || row, featuresHeading, `${uid}-p${i}`));
+
+  const body = createEl('div', 'widget-platform-body');
+  const tabRow = createEl('div', 'widget-platform-tabs');
+  tabRow.setAttribute('role', 'tablist');
+  tabRow.setAttribute('aria-label', 'Platforms');
+  const tabs = panes.map((p, i) => {
+    const tab = createEl('button', 'widget-platform-tab', p.name);
+    tab.type = 'button';
+    tab.id = `${uid}-p${i}-tab`;
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-controls', p.pane.id);
+    p.pane.setAttribute('aria-labelledby', tab.id);
+    tabRow.append(tab);
+    return tab;
   });
 
-  const tabs = [];
-  [...cell.children].forEach((el) => {
-    if (el.tagName === 'P') {
-      const text = el.textContent.trim();
-      if (/^(Investor App|Trader App|Trader Pro Terminal)$/.test(text)) {
-        el.classList.add('widget-platform-tab');
-        tabs.push(el);
+  const stage = createEl('div', 'widget-platform-stage');
+  panes.forEach((p) => stage.append(p.pane));
+  body.append(tabRow, stage);
+
+  platformRows.forEach((r) => r.remove());
+  block.append(body);
+
+  wireTabs(tabs, panes.map((p) => p.pane), (idx) => {
+    panes.forEach((p, i) => {
+      if (i === idx) {
+        p.activateFeature(Number(p.pane.dataset.activeFeature || 0));
+      } else {
+        syncVideos(p.mediaItems, -1);
       }
-      // Remove any remaining empty (media) links so they don't render as
-      // empty buttons.
-      const a = el.querySelector('a');
-      if (a && !a.textContent.trim() && !a.querySelector('img')) el.remove();
-    }
+    });
   });
 
-  // Group the tab pills into a single horizontal row (they render as a
-  // stacked column otherwise). Insert the row where the first tab was.
-  if (tabs.length) {
-    const tabRow = document.createElement('div');
-    tabRow.className = 'widget-platform-tabs';
-    tabs[0].before(tabRow);
-    tabs.forEach((t) => tabRow.appendChild(t));
-  }
-
-  decorateFeatureTabs(cell);
-
-  // Split into two columns — media on the left, all the content on the right —
-  // matching the source. Only when a media URL was found.
-  if (mediaUrl) {
-    const media = document.createElement('div');
-    media.className = 'widget-platform-media';
-    const video = document.createElement('video');
-    video.setAttribute('src', mediaUrl);
-    video.setAttribute('autoplay', '');
-    video.setAttribute('loop', '');
-    video.setAttribute('muted', '');
-    video.setAttribute('playsinline', '');
-    video.muted = true;
-    media.appendChild(video);
-
-    const content = document.createElement('div');
-    content.className = 'widget-platform-content';
-    [...cell.children].forEach((c) => content.appendChild(c));
-
-    cell.append(media, content);
-  }
+  // Only start video playback once the section is near the viewport.
+  const first = panes[0];
+  const io = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) {
+      io.disconnect();
+      block.classList.add('in-view');
+      const active = panes.find((p) => p.pane.classList.contains('active')) || first;
+      syncVideos(active.mediaItems, Number(active.pane.dataset.activeFeature || 0));
+    }
+  }, { rootMargin: '200px' });
+  io.observe(block);
 }
 
 /**

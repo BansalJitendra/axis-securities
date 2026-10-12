@@ -23,7 +23,7 @@
           "instances": [
             "#main-content > div.mui-1b45yeg > div.MuiStack-root.mui-cdmdob > div.mui-zmt9z3 > div.swiper > div.MuiBox-root.mui-u14qbz",
             ".mui-1ump8tf",
-            ".mui-on6ge4"
+            "#main-content div:has(> div > div[role=\"tablist\"])"
           ]
         },
         {
@@ -41,7 +41,7 @@
         {
           "name": "cards-features",
           "instances": [
-            ".mui-10os289"
+            "#main-content div:has(> div > h2 + h2):has(.swiper)"
           ]
         },
         {

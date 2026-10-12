@@ -428,163 +428,285 @@
 
 /* ------------------------------------------------------------------ */
 
-/* The block content sits in a white rounded card (matches the source). */
-.widget-platforms {
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 24px;
-}
-
-.widget-platforms > div > div {
+/* Values from the source computed styles (axisdirect.in "Platforms for
+   Seamless Access"): no card chrome — the section sits on the page panel. */
+.widget.widget-platforms {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-/* Two-column layout — promo video on the left, tabs + features on the right
-   (matches the source). Stacks on mobile. */
-.widget-platform-media {
-  width: 100%;
-}
-
-.widget-platform-media video {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
-}
-
-.widget-platform-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-@media (width >= 900px) {
-  .widget-platforms {
-    padding: 40px;
-  }
-
-  .widget-platforms > div > div:has(.widget-platform-media) {
-    flex-direction: row;
-    align-items: center;
-    gap: 40px;
-  }
-
-  .widget-platform-media {
-    flex: 0 0 45%;
-    max-width: 500px;
-  }
-
-  .widget-platform-content {
-    flex: 1 1 auto;
-  }
-}
-
-/* Platform tabs — a horizontal row of pill buttons (matches the source). */
-.widget-platform-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-/* Platform tabs — pill buttons (active state uses brand-primary border) */
-.widget-platform-tab {
-  margin: 0;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 12px 20px;
-  font-weight: 700;
-  font-size: var(--body-font-size-s); /* ~19.8px source; 16px keeps rhythm */
-  color: var(--text-color);
-  white-space: nowrap;
+  gap: 24px;
+  margin: 32px 0;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .widget-platforms h2 {
-  margin-top: 12px;
-}
-
-/* Feature heading — brand maroon */
-.widget-platforms h3 {
-  margin: 12px 0 8px;
-  font-size: var(--heading-font-size-l); /* ~24px */
-  color: var(--brand-primary);
-}
-
-.widget-platforms p {
-  margin: 4px 0;
-  font-size: var(--body-font-size-s);
+  margin: 0;
+  font-size: 17px;
+  line-height: 22.67px;
+  letter-spacing: 0.16px;
+  text-align: center;
   color: var(--text-color);
 }
 
-.widget-platforms a.button:any-link {
-  align-self: flex-start;
-  margin-top: 12px;
+/* accent words ("Seamless Access", "Platform") are authored in <strong> */
+.widget-platforms h2 strong {
+  font-weight: inherit;
+  color: #99144e;
 }
 
-/* Shared "Download App" CTA — right-aligned at the bottom of the card,
-   matching the source. */
-.widget-feature-cta {
-  margin-top: 16px;
-  text-align: right;
+.widget-platform-body {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.widget-platforms a.button.widget-feature-cta,
-.widget-feature-cta a.button:any-link {
-  align-self: flex-end;
-}
-
-/* Platform Features — interactive tabs (horizontal row of pill buttons that
-   switch the panel below, matching the source). */
-.widget-feature-tabs {
+/* Platform tabs */
+.widget-platform-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin: 12px 0 20px;
+  justify-content: center;
+  gap: 8px;
 }
 
-.widget-feature-tab {
+.widget-platform-tab {
   margin: 0;
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-  padding: 10px 20px;
-  background: var(--background-color);
+  padding: 8px;
+  border: 1px solid var(--text-color);
+  border-radius: 8px;
+  background: transparent;
+  color: #575757;
   font-family: var(--body-font-family);
+  font-size: 14px;
   font-weight: 700;
-  font-size: var(--body-font-size-s);
-  color: var(--text-color);
-  white-space: nowrap;
+  line-height: 20px;
+  letter-spacing: 0.24px;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.widget-feature-tab:hover {
+.widget-platform-tab.active {
   border-color: var(--brand-primary);
 }
 
-.widget-feature-tab.active {
-  border-color: var(--brand-primary);
-  background: var(--brand-primary);
-  color: #fff;
+/* Pane: features column (mobile shows heading + tabs, then media, then card) */
+.widget-platform-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
 }
 
-/* Only the active feature panel is shown. It sits in a light-grey rounded
-   box (matches the source: #f9f9f9, 16px radius, 24px padding). */
-.widget-feature-panel {
+.widget-platform-pane[hidden] {
   display: none;
 }
 
-.widget-feature-panel.active {
-  display: block;
-  background: #f9f9f9;
-  border-radius: 16px;
-  padding: 24px;
+.widget-platform-content {
+  display: contents;
 }
 
-/* The heading inside the panel loses its top margin so it hugs the box. */
-.widget-feature-panel.active h3 {
-  margin-top: 0;
+.widget-platform-media {
+  order: 2;
+  width: 100%;
+}
+
+.widget-platform-media-item {
+  display: none;
+}
+
+.widget-platform-media-item.active {
+  display: block;
+}
+
+.widget-platform-media-item video,
+.widget-platform-media-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 500 / 560;
+  object-fit: contain;
+}
+
+.widget-features-heading {
+  order: 1;
+}
+
+/* Feature pill tabs */
+.widget-feature-tabs {
+  order: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-self: stretch;
+  margin-bottom: -24px; /* pills carry their own 16px bottom margin */
+}
+
+.widget-feature-tab {
+  margin: 0 8px 16px 0;
+  padding: 4px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.widget-feature-tab.active {
+  background: var(--brand-accent);
+  color: #fff;
+}
+
+.widget-platform-tab:focus-visible,
+.widget-feature-tab:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+/* Description card */
+.widget-feature-panels {
+  order: 3;
+  align-self: stretch;
+}
+
+.widget-feature-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--light-color, #f9f9f9);
+}
+
+.widget-feature-panel[hidden] {
+  display: none;
+}
+
+.widget-feature-panel p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
+}
+
+.widget-platforms .widget-feature-title {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 26.67px;
+  letter-spacing: 0.16px;
+  color: var(--brand-primary);
+}
+
+/* "Download App ›" CTA */
+.widget-feature-panel .widget-feature-cta {
+  align-self: stretch;
+  text-align: center;
+}
+
+.widget-feature-cta a:any-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 8px 4px;
+  color: var(--brand-accent);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.widget-feature-cta a:any-link::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin-left: 12px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  transform: rotate(-45deg);
+}
+
+.widget-feature-cta a:hover {
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .widget.widget-platforms {
+    margin: 0;
+    padding: 48px;
+  }
+
+  .widget-platforms h2 {
+    font-size: 31.2px;
+    line-height: 40.95px;
+    letter-spacing: normal;
+  }
+
+  .widget-platform-tabs {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .widget-platform-tab {
+    padding: 16px;
+    border-radius: 16px;
+    color: var(--text-color);
+    font-size: 19.8px;
+    line-height: 25.74px;
+    letter-spacing: 0.16px;
+  }
+
+  .widget-platforms .widget-feature-title {
+    font-size: 23.6px;
+    line-height: 31.47px;
+  }
+
+  .widget-feature-panel {
+    gap: 16px;
+    margin-right: 16px;
+  }
+
+  .widget-feature-panel .widget-feature-cta {
+    text-align: right;
+  }
+}
+
+/* Side by side: media left (500×560), features right — once the block is wide
+   enough (the sticky account card narrows this column on mid-size screens). */
+@container (width >= 860px) {
+  .widget-platform-pane {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .widget-platform-media {
+    order: 0;
+    flex: 0 1 500px;
+    min-width: 0;
+  }
+
+  .widget-platform-content {
+    flex: 0 1 420px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .widget-platforms .widget-features-heading {
+    text-align: left;
+  }
+
+  .widget-feature-tabs {
+    margin-bottom: -8px;
+  }
 }

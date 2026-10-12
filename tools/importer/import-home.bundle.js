@@ -162,10 +162,10 @@ var CustomImportScript = (() => {
         hrefs.add(href);
         const p = document2.createElement("p");
         const strong = document2.createElement("strong");
-        const link = document2.createElement("a");
-        link.href = href;
-        link.textContent = label;
-        strong.append(link);
+        const link2 = document2.createElement("a");
+        link2.href = href;
+        link2.textContent = label;
+        strong.append(link2);
         p.append(strong);
         ctas.push(p);
       });
@@ -190,7 +190,177 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/widget.js
+  var SOURCE_ORIGIN = "https://www.axisdirect.in";
+  var ASSET_BASE = `${SOURCE_ORIGIN}/simplehai-assets`;
+  function flightPayload(document2) {
+    const sources = [];
+    if (typeof window !== "undefined" && window.__IMPORT_FLIGHT_SCRIPTS__) {
+      sources.push(window.__IMPORT_FLIGHT_SCRIPTS__);
+    }
+    document2.querySelectorAll("script").forEach((s) => sources.push(s.textContent || ""));
+    let out = "";
+    sources.forEach((text) => {
+      const re = /self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)/g;
+      let m;
+      while (m = re.exec(text)) {
+        try {
+          out += JSON.parse(m[1]);
+        } catch (e) {
+        }
+      }
+    });
+    return out;
+  }
+  function objectAt(text, start) {
+    let depth = 0;
+    let inStr = false;
+    let esc = false;
+    for (let i = start; i < text.length; i += 1) {
+      const c = text[i];
+      if (inStr) {
+        if (esc) esc = false;
+        else if (c === "\\") esc = true;
+        else if (c === '"') inStr = false;
+      } else if (c === '"') inStr = true;
+      else if (c === "{") depth += 1;
+      else if (c === "}") {
+        depth -= 1;
+        if (depth === 0) {
+          try {
+            return JSON.parse(text.slice(start, i + 1));
+          } catch (e) {
+            return null;
+          }
+        }
+      }
+    }
+    return null;
+  }
+  function platformsData(document2) {
+    const payload = flightPayload(document2);
+    const key = '"platforms":[';
+    const at = payload.indexOf(key);
+    if (at < 0) return { platforms: [], title: null };
+    const apps = [];
+    let i = at + key.length;
+    while (payload[i] === "{") {
+      const obj = objectAt(payload, i);
+      if (!obj) break;
+      apps.push(obj);
+      let depth = 0;
+      let inStr = false;
+      let esc = false;
+      let j = i;
+      for (; j < payload.length; j += 1) {
+        const c = payload[j];
+        if (inStr) {
+          if (esc) esc = false;
+          else if (c === "\\") esc = true;
+          else if (c === '"') inStr = false;
+        } else if (c === '"') inStr = true;
+        else if (c === "{") depth += 1;
+        else if (c === "}") {
+          depth -= 1;
+          if (depth === 0) break;
+        }
+      }
+      i = j + 1;
+      if (payload[i] === ",") i += 1;
+    }
+    const before = payload.slice(Math.max(0, at - 1500), at);
+    const labels = [...before.matchAll(/"label":("(?:[^"\\]|\\.)*")/g)];
+    let title = null;
+    if (labels.length) {
+      try {
+        title = JSON.parse(labels[labels.length - 1][1]);
+      } catch (e) {
+      }
+    }
+    return { platforms: apps, title };
+  }
+  function richHeading(document2, tag, html, fallback) {
+    const h = document2.createElement(tag);
+    const tmp = document2.createElement("div");
+    tmp.innerHTML = html || "";
+    const src = tmp.querySelector("p") || tmp;
+    if (!src.textContent.trim()) {
+      h.textContent = fallback || "";
+      return h;
+    }
+    src.childNodes.forEach((n) => {
+      if (n.nodeType === 3) h.append(document2.createTextNode(n.textContent));
+      else if (n.nodeType === 1 && /color/i.test(n.getAttribute("style") || "")) {
+        const strong = document2.createElement("strong");
+        strong.textContent = n.textContent;
+        h.append(strong);
+      } else if (n.nodeType === 1) h.append(document2.createTextNode(n.textContent));
+    });
+    return h;
+  }
+  function assetUrl(path) {
+    if (!path) return "";
+    if (/^https?:/i.test(path)) return path;
+    return `${ASSET_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
+  }
+  function parsePlatforms(element, document2) {
+    const { platforms, title } = platformsData(document2);
+    if (!platforms.length) return false;
+    const titleText = (element.querySelector("h2") || {}).textContent || "Platforms for Seamless Access";
+    const headRow = [
+      richHeading(document2, "h2", title, titleText.trim()),
+      richHeading(document2, "h2", platforms[0].appHeader, "Platform Features")
+    ];
+    const rows = [[headRow]];
+    platforms.forEach((app) => {
+      const name = [app.appNamePrefix, app.appNameSuffix].filter(Boolean).join(" ").trim();
+      const cell = [];
+      const h3 = document2.createElement("h3");
+      h3.textContent = name;
+      cell.push(h3);
+      const features = app.platformFeaturesArray || [];
+      features.forEach((f) => {
+        const h4 = document2.createElement("h4");
+        h4.textContent = f.label;
+        cell.push(h4);
+        const url = assetUrl(f.appPreviewImage);
+        if (url && (f.assetType === "VIDEO" || /\.(webm|mp4)$/i.test(url))) {
+          const p = document2.createElement("p");
+          const a = document2.createElement("a");
+          a.href = url;
+          a.textContent = url;
+          p.append(a);
+          cell.push(p);
+        } else if (url) {
+          const img = document2.createElement("img");
+          img.src = url;
+          img.alt = `${f.label} on Axis Direct ${name}`;
+          cell.push(img);
+        }
+        if (f.description) {
+          const p = document2.createElement("p");
+          p.textContent = f.description;
+          cell.push(p);
+        }
+      });
+      const ctaSrc = features.find((f) => f.redirectUrl);
+      if (ctaSrc) {
+        const p = document2.createElement("p");
+        const a = document2.createElement("a");
+        a.href = ctaSrc.redirectUrl;
+        a.textContent = ctaSrc.startInvesting || "Download App";
+        p.append(a);
+        cell.push(p);
+      }
+      rows.push([cell]);
+    });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "widget", cells: rows });
+    element.replaceWith(block);
+    return true;
+  }
   function parse2(element, { document: document2 }) {
+    if (element.querySelector('[role="tablist"]') && /platform/i.test(element.textContent) && parsePlatforms(element, document2)) {
+      return;
+    }
     const heading = element.querySelector("h1, h2, h3");
     const contentNodes = Array.from(element.childNodes).filter((node) => {
       if (node.nodeType === 1) {
@@ -287,30 +457,176 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/cards-features.js
-  function parse5(element, { document: document2 }) {
-    const headings = Array.from(element.querySelectorAll(":scope > .mui-44obd5 h2, :scope > div > h2"));
-    const introHeadings = headings.length ? headings : Array.from(element.querySelectorAll("h2")).slice(0, 2);
-    let cards = Array.from(element.querySelectorAll(".mui-19yww5h"));
-    if (!cards.length) cards = Array.from(element.querySelectorAll(".swiper-slide"));
-    if (!cards.length && !introHeadings.length) {
-      element.replaceWith(...element.childNodes);
-      return;
-    }
-    const cells = [];
-    if (introHeadings.length) {
-      cells.push([introHeadings, ""]);
-    }
-    cards.forEach((card) => {
-      const img = card.querySelector("img");
-      const title = card.querySelector("h1, h2, h3, h4, h5, h6");
-      const list = card.querySelector("ol, ul");
-      const imageCell = img || "";
-      const textCell = [];
-      if (title) textCell.push(title);
-      if (list) textCell.push(list);
-      if (!textCell.length) textCell.push(card.textContent.trim());
-      cells.push([imageCell, textCell]);
+  var SOURCE_ORIGIN2 = "https://www.axisdirect.in";
+  var ASSET_BASE2 = `${SOURCE_ORIGIN2}/simplehai-assets`;
+  function flightPayload2(document2) {
+    const sources = [];
+    if (typeof window !== "undefined" && window.__IMPORT_FLIGHT_SCRIPTS__) sources.push(window.__IMPORT_FLIGHT_SCRIPTS__);
+    document2.querySelectorAll("script").forEach((s) => sources.push(s.textContent || ""));
+    let out = "";
+    sources.forEach((text) => {
+      const re = /self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)/g;
+      let m;
+      while (m = re.exec(text)) {
+        try {
+          out += JSON.parse(m[1]);
+        } catch (e) {
+        }
+      }
     });
+    return out;
+  }
+  function flightProp(payload, key, from = 0) {
+    const needle = `"${key}":`;
+    let at = payload.indexOf(needle, from);
+    while (at >= 0) {
+      const start = at + needle.length;
+      const open = payload[start];
+      if (open === "[" || open === "{") {
+        const close = open === "[" ? "]" : "}";
+        let depth = 0;
+        let inStr = false;
+        let esc = false;
+        for (let i = start; i < payload.length; i += 1) {
+          const c = payload[i];
+          if (inStr) {
+            if (esc) esc = false;
+            else if (c === "\\") esc = true;
+            else if (c === '"') inStr = false;
+          } else if (c === '"') inStr = true;
+          else if (c === open) depth += 1;
+          else if (c === close) {
+            depth -= 1;
+            if (depth === 0) {
+              try {
+                return { value: JSON.parse(payload.slice(start, i + 1)), at };
+              } catch (e) {
+                break;
+              }
+            }
+          }
+        }
+      }
+      at = payload.indexOf(needle, at + 1);
+    }
+    return null;
+  }
+  var assetUrl2 = (p) => !p || /^https?:/i.test(p) ? p || "" : `${ASSET_BASE2}${p.startsWith("/") ? "" : "/"}${p}`;
+  var pageUrl = (p) => !p || /^https?:/i.test(p) ? p || "" : `${SOURCE_ORIGIN2}${p.startsWith("/") ? "" : "/"}${p}`;
+  function richHeading2(document2, tag, html, fallback) {
+    const h = document2.createElement(tag);
+    const tmp = document2.createElement("div");
+    tmp.innerHTML = html || "";
+    const src = tmp.querySelector("p") || tmp;
+    if (!src.textContent.trim()) {
+      h.textContent = fallback || "";
+      return h;
+    }
+    src.childNodes.forEach((n) => {
+      const style = n.nodeType === 1 && n.getAttribute("style") || "";
+      const accent = /color/i.test(style) && !/hsl\(\s*0\s*,\s*0%\s*,\s*0%\s*\)|#000\b|rgb\(\s*0,\s*0,\s*0\s*\)/i.test(style);
+      if (accent) {
+        const strong = document2.createElement("strong");
+        strong.textContent = n.textContent;
+        h.append(strong);
+      } else {
+        h.append(document2.createTextNode(n.textContent));
+      }
+    });
+    return h;
+  }
+  var str = (m) => {
+    try {
+      return m ? JSON.parse(m[1]) : null;
+    } catch (e) {
+      return null;
+    }
+  };
+  function fromFlightData(document2) {
+    const payload = flightPayload2(document2);
+    const features = flightProp(payload, "features");
+    if (!features || !Array.isArray(features.value) || !features.value.length || !features.value[0].heading) return null;
+    const before = payload.slice(Math.max(0, features.at - 1500), features.at);
+    const after = payload.slice(features.at, features.at + 2e4);
+    return {
+      title: str([...before.matchAll(/"label":("(?:[^"\\]|\\.)*")/g)].pop()),
+      // subtitle: the string children of the last {"component":"h2", sx:{…}, …} before the features
+      subtitle: str(before.slice(Math.max(0, before.lastIndexOf('"component":"h2"'))).match(/"children":("(?:[^"\\]|\\.)*")/)),
+      features: features.value,
+      ctaLabel: str(after.match(/"allFeatureButtonLabel":("(?:[^"\\]|\\.)*")/)),
+      ctaUrl: str(after.match(/"viewAllFeatureRedirectUrl":("(?:[^"\\]|\\.)*")/))
+    };
+  }
+  function link(document2, href, text) {
+    const a = document2.createElement("a");
+    a.href = href;
+    a.textContent = text;
+    return a;
+  }
+  function parse5(element, { document: document2 }) {
+    const data = fromFlightData(document2);
+    const cells = [];
+    if (data) {
+      const intro = [richHeading2(document2, "h2", data.title, "Key Features")];
+      if (data.subtitle) {
+        const p = document2.createElement("p");
+        p.textContent = data.subtitle;
+        intro.push(p);
+      }
+      cells.push(["", intro]);
+      data.features.forEach((f) => {
+        const img = document2.createElement("img");
+        img.src = assetUrl2(f.imageUrl);
+        img.alt = f.imageAltText || f.heading || "";
+        const h3 = document2.createElement("h3");
+        if (f.path) h3.append(link(document2, pageUrl(f.path), f.heading));
+        else h3.textContent = f.heading;
+        const text = [h3];
+        if (Array.isArray(f.benefits) && f.benefits.length) {
+          const ul = document2.createElement("ul");
+          f.benefits.forEach((b) => {
+            const li = document2.createElement("li");
+            li.textContent = b;
+            ul.append(li);
+          });
+          text.push(ul);
+        }
+        cells.push([img, text]);
+      });
+      if (data.ctaLabel && data.ctaUrl) {
+        const p = document2.createElement("p");
+        p.append(link(document2, pageUrl(data.ctaUrl), data.ctaLabel));
+        cells.push(["", [p]]);
+      }
+    } else {
+      const introHeadings = Array.from(element.querySelectorAll("h2")).slice(0, 2);
+      const slides = Array.from(element.querySelectorAll(".swiper-slide"));
+      if (!slides.length && !introHeadings.length) {
+        element.replaceWith(...element.childNodes);
+        return;
+      }
+      if (introHeadings.length) cells.push(["", introHeadings]);
+      const seen = /* @__PURE__ */ new Set();
+      slides.forEach((card) => {
+        const title = card.querySelector("h1, h2, h3, h4, h5, h6");
+        const key = title ? title.textContent.trim() : card.textContent.trim();
+        if (seen.has(key)) return;
+        seen.add(key);
+        const img = card.querySelector("img");
+        const list = card.querySelector("ol, ul");
+        const textCell = [];
+        if (title) textCell.push(title);
+        if (list) textCell.push(list);
+        if (!textCell.length) textCell.push(card.textContent.trim());
+        cells.push([img || "", textCell]);
+      });
+      const cta = [...element.querySelectorAll("a[href]")].find((a) => /explore/i.test(a.textContent));
+      if (cta) {
+        const p = document2.createElement("p");
+        p.append(link(document2, cta.href, cta.textContent.trim()));
+        cells.push(["", [p]]);
+      }
+    }
     const block = WebImporter.Blocks.createBlock(document2, { name: "cards-features", cells });
     element.replaceWith(block);
   }
@@ -425,7 +741,7 @@ var CustomImportScript = (() => {
         instances: [
           "#main-content > div.mui-1b45yeg > div.MuiStack-root.mui-cdmdob > div.mui-zmt9z3 > div.swiper > div.MuiBox-root.mui-u14qbz",
           ".mui-1ump8tf",
-          ".mui-on6ge4"
+          '#main-content div:has(> div > div[role="tablist"])'
         ]
       },
       {
@@ -438,7 +754,7 @@ var CustomImportScript = (() => {
       },
       {
         name: "cards-features",
-        instances: [".mui-10os289"]
+        instances: ["#main-content div:has(> div > h2 + h2):has(.swiper)"]
       },
       {
         name: "columns-appdownload",
@@ -510,6 +826,12 @@ var CustomImportScript = (() => {
     return pageBlocks;
   }
   var import_home_default = {
+    // Runs on the live page before html2md hands the transform a script-free
+    // copy of the DOM: stash the Next.js flight-data scripts so parsers can read
+    // content the page only renders on interaction (e.g. inactive platform tabs).
+    onLoad: ({ document: document2 }) => {
+      window.__IMPORT_FLIGHT_SCRIPTS__ = [...document2.querySelectorAll("script")].map((s) => s.textContent || "").filter((t) => t.includes("self.__next_f.push")).join("\n");
+    },
     transform: (payload) => {
       const { document: document2, url, html, params } = payload;
       const main = document2.body;

@@ -40,7 +40,7 @@ const PAGE_TEMPLATE = {
       instances: [
         '#main-content > div.mui-1b45yeg > div.MuiStack-root.mui-cdmdob > div.mui-zmt9z3 > div.swiper > div.MuiBox-root.mui-u14qbz',
         '.mui-1ump8tf',
-        '.mui-on6ge4'
+        '#main-content div:has(> div > div[role="tablist"])'
       ]
     },
     {
@@ -53,7 +53,7 @@ const PAGE_TEMPLATE = {
     },
     {
       name: 'cards-features',
-      instances: ['.mui-10os289']
+      instances: ['#main-content div:has(> div > h2 + h2):has(.swiper)']
     },
     {
       name: 'columns-appdownload',
@@ -140,6 +140,16 @@ function findBlocksOnPage(document, template) {
 }
 
 export default {
+  // Runs on the live page before html2md hands the transform a script-free
+  // copy of the DOM: stash the Next.js flight-data scripts so parsers can read
+  // content the page only renders on interaction (e.g. inactive platform tabs).
+  onLoad: ({ document }) => {
+    window.__IMPORT_FLIGHT_SCRIPTS__ = [...document.querySelectorAll('script')]
+      .map((s) => s.textContent || '')
+      .filter((t) => t.includes('self.__next_f.push'))
+      .join('\n');
+  },
+
   transform: (payload) => {
     const { document, url, html, params } = payload;
 

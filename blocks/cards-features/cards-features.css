@@ -1,125 +1,345 @@
-/* cards-features — "Key Features" feature cards
-   Values extracted from axisdirect.in computed styles.
-   Section: light-blue panel, centered header, white rounded cards. */
+/* cards-features — "Key Features" carousel.
+   Values extracted from axisdirect.in computed styles: light-blue band,
+   centred title, white 16px-radius cards with a green-check points list,
+   centred looping carousel with arrows (desktop) + progress dots. */
 
 .cards-features {
-  background-color: #ebf0f9;
-  padding: 40px 24px;
+  --cards-features-card-w: 309px;
+  --cards-features-gap: 16px;
+  --cards-features-check: rgb(39 136 41);
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
+  margin: 0 -24px; /* full-bleed band on mobile (section has 24px side padding) */
+  padding: 24px 0;
+  background-color: #ebf0f9;
+  color: var(--text-color);
 }
 
-/* --- header (first row: title + subtitle) --- */
+/* --- header: title + description --- */
 .cards-features .cards-features-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  max-width: 70%;
   text-align: center;
-  max-width: 640px;
 }
 
 .cards-features .cards-features-header h2 {
   margin: 0;
-  font-size: var(--heading-font-size-xl); /* 31.2px -> 32px */
+  font-family: var(--heading-font-family);
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.3;
-  color: var(--text-color);
+  line-height: 22.67px;
+  letter-spacing: 0.16px;
+  color: #000;
 }
 
-.cards-features .cards-features-header h2 + h2 {
-  font-size: var(--body-font-size-s); /* subtitle rendered ~16px, regular weight */
-  font-weight: 400;
-  line-height: 1.5;
+/* accent word ("Key") is authored in <strong> */
+.cards-features .cards-features-header h2 strong {
+  font-weight: inherit;
+  color: #99144e;
 }
 
-/* --- card grid --- */
-.cards-features > ul {
-  list-style: none;
+.cards-features .cards-features-header p {
   margin: 0;
-  padding: 0 0 8px; /* room for the scrollbar without clipping cards */
-  width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 24px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
 }
 
-.cards-features > ul > li {
-  flex: 0 0 260px;
-  scroll-snap-align: start;
-  background-color: var(--background-color);
-  border-radius: 16px;
-  padding: 24px;
+/* --- carousel --- */
+.cards-features .cards-features-viewport {
+  width: 100%;
+  overflow: hidden;
+  padding-top: 6px;
+}
+
+.cards-features .cards-features-track {
+  display: flex;
+  gap: var(--cards-features-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: transform 0.5s ease;
+}
+
+/* --- card --- */
+.cards-features .cards-features-card {
+  position: relative;
+  flex: 0 0 var(--cards-features-card-w);
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-height: 232px;
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--background-color);
 }
 
-/* --- icon --- */
+.cards-features .cards-features-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .cards-features .cards-features-card-icon {
-  line-height: 0;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
 }
 
+.cards-features .cards-features-card-icon picture,
 .cards-features .cards-features-card-icon img {
+  display: block;
   width: 40px;
   height: 40px;
   object-fit: contain;
 }
 
-/* --- card body --- */
-.cards-features .cards-features-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cards-features .cards-features-card-body h3 {
+.cards-features .cards-features-card-title {
+  flex: 1;
   margin: 0;
-  font-size: var(--heading-font-size-s); /* ~18px */
+  font-family: var(--heading-font-family);
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.33;
+  line-height: 22.67px;
   letter-spacing: 0.16px;
   color: var(--text-color);
 }
 
-.cards-features .cards-features-card-body ol,
-.cards-features .cards-features-card-body ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* the title link covers the whole card */
+.cards-features .cards-features-card-link:any-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cards-features .cards-features-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+}
+
+.cards-features .cards-features-card-link:focus-visible {
+  outline: none;
+}
+
+.cards-features .cards-features-card-link:focus-visible::after {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+/* chevron › */
+.cards-features .cards-features-chevron {
+  flex: 0 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.cards-features .cards-features-chevron::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  margin-right: 3px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  transform: rotate(-45deg);
+}
+
+/* points with green check-circle bullets */
+.cards-features .cards-features-card-body ul,
+.cards-features .cards-features-card-body ol {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin: 0 0 0 20px;
+  padding: 0;
+  list-style: none;
 }
 
 .cards-features .cards-features-card-body li {
-  margin: 0;
-  padding: 0;
-  font-size: var(--body-font-size-s); /* 16px */
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
 }
 
-/* --- desktop: the carousel row is capped to the content width; ~4 cards
-   are visible at once and the rest scroll (matches the source). --- */
+.cards-features .cards-features-card-body li::before {
+  content: '';
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--cards-features-check);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20Zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-1-5.4 6.4-6.4 1.4 1.4-7.8 7.8-4.2-4.2 1.4-1.4 2.8 2.8Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* --- controls: arrows (desktop) + progress dots --- */
+.cards-features .cards-features-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: -6px;
+}
+
+.cards-features .cards-features-arrow {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--light-color, #f9f9f9);
+  color: var(--brand-accent);
+  cursor: pointer;
+}
+
+.cards-features .cards-features-arrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+}
+
+.cards-features .cards-features-prev::before {
+  margin-left: 3px;
+  transform: rotate(135deg);
+}
+
+.cards-features .cards-features-next::before {
+  margin-right: 3px;
+  transform: rotate(-45deg);
+}
+
+.cards-features .cards-features-dots {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.cards-features .cards-features-dot {
+  width: 6px;
+  height: 6px;
+  margin: 2px;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(var(--brand-accent), var(--brand-accent)) no-repeat 0 0 / 0 100%, #b4b4b4;
+  cursor: pointer;
+}
+
+.cards-features .cards-features-dot.active {
+  width: 20px;
+  background-size: 100% 100%, auto;
+  animation: cards-features-progress var(--cards-features-autoplay, 5000ms) linear;
+}
+
+.cards-features.paused .cards-features-dot.active {
+  animation-play-state: paused;
+}
+
+@keyframes cards-features-progress {
+  from { background-size: 0 100%, auto; }
+  to { background-size: 100% 100%, auto; }
+}
+
+/* --- closing CTA --- */
+.cards-features .cards-features-cta {
+  margin: 14px 0 0;
+}
+
+.cards-features .cards-features-cta a:any-link {
+  display: inline-flex;
+  padding: 8px 4px;
+  color: var(--brand-accent);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.cards-features .cards-features-cta a:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cards-features .cards-features-track {
+    transition: none;
+  }
+
+  .cards-features .cards-features-dot.active {
+    animation: none;
+  }
+}
+
 @media (width >= 900px) {
   .cards-features {
-    padding: 48px 24px;
+    --cards-features-card-w: 307px;
+    --cards-features-gap: 24px;
+
+    gap: 32px;
+    margin: 0;
+    padding: 48px 0;
   }
 
-  .cards-features > ul {
-    max-width: 1200px;
+  .cards-features .cards-features-header {
+    max-width: none;
   }
 
-  .cards-features > ul > li {
-    min-height: 200px;
-    justify-content: flex-start;
+  .cards-features .cards-features-header h2 {
+    font-size: 31.2px;
+    line-height: 40.95px;
+    letter-spacing: normal;
+  }
+
+  .cards-features .cards-features-header p {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.16px;
+  }
+
+  .cards-features .cards-features-card {
+    gap: 24px;
+    min-height: 248px;
+    padding: 24px;
+  }
+
+  .cards-features .cards-features-card-title {
+    font-size: 17.9px;
+    line-height: 23.87px;
+  }
+
+  .cards-features .cards-features-card-body ul,
+  .cards-features .cards-features-card-body ol {
+    margin-left: 4px;
+  }
+
+  .cards-features .cards-features-controls {
+    margin-top: -14px;
+  }
+
+  .cards-features .cards-features-arrow {
+    display: inline-flex;
+  }
+
+  .cards-features .cards-features-cta {
+    margin-top: 8px;
   }
 }
