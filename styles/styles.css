@@ -443,10 +443,6 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) {
     z-index: 5;
   }
 
-  main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
-    font-size: 20px;
-    letter-spacing: normal;
-  }
 }
 
 /* reset default heading/paragraph margins inside the card */
@@ -464,6 +460,13 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
   line-height: 1.3;
   letter-spacing: 0.16px;
   color: var(--text-color);
+}
+
+@media (width >= 900px) {
+  main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
+    font-size: 20px;
+    letter-spacing: normal;
+  }
 }
 
 /* subtitle */
