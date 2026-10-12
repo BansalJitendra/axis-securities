@@ -3,9 +3,11 @@
  * @param {Element} block The footer block element
  */
 export default async function decorate(block) {
-  // metadata-independent dual-fetch: /content first (localhost), then root (DA/EDS prod)
-  let resp = await fetch('/content/footer.plain.html');
-  if (!resp.ok) resp = await fetch('/footer.plain.html');
+  // metadata-independent: pages previewed locally from the import folder live
+  // under /content/, everywhere else the fragment is at the root — request
+  // only the one that exists (no 404 round-trip).
+  const base = window.location.pathname.startsWith('/content/') ? '/content' : '';
+  const resp = await fetch(`${base}/footer.plain.html`);
   if (!resp.ok) return;
 
   const html = await resp.text();

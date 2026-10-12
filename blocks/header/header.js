@@ -5,13 +5,14 @@
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
 /**
- * Fetch the nav fragment. Metadata-independent dual-fetch:
- * /content first (localhost / aem up), then root (DA/EDS production).
+ * Fetch the nav fragment. Metadata-independent: pages previewed locally from
+ * the import folder live under /content/, everywhere else the fragment is at
+ * the root — request only the one that exists (no 404 round-trip).
  * @returns {Promise<Document|null>} parsed fragment document
  */
 async function fetchNavFragment() {
-  let resp = await fetch('/content/nav.plain.html');
-  if (!resp.ok) resp = await fetch('/nav.plain.html');
+  const base = window.location.pathname.startsWith('/content/') ? '/content' : '';
+  const resp = await fetch(`${base}/nav.plain.html`);
   if (!resp.ok) return null;
   const html = await resp.text();
   return new DOMParser().parseFromString(html, 'text/html');
