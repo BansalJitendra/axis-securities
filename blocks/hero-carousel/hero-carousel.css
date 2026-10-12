@@ -261,6 +261,13 @@
     padding: 0;
   }
 
+  /* Pass the slide height down so the illustration fits 496px tall. */
+  .hero-carousel-image p,
+  .hero-carousel-image picture {
+    display: block;
+    height: 100%;
+  }
+
   .hero-carousel-image img {
     width: auto;
     max-width: 100%;
