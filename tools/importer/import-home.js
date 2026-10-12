@@ -13,6 +13,7 @@ import columnsAppdownloadParser from './parsers/columns-appdownload.js';
 import cleanupTransformer from './transformers/axisdirect-cleanup.js';
 import sectionsTransformer from './transformers/axisdirect-sections.js';
 import imageOverridesTransformer from './transformers/axisdirect-image-overrides.js';
+import openAccountTransformer from './transformers/axisdirect-open-account.js';
 
 // PARSER REGISTRY
 const parsers = {
@@ -92,6 +93,7 @@ const PAGE_TEMPLATE = {
 // TRANSFORMER REGISTRY - section transformer runs after cleanup (in afterTransform hook)
 const transformers = [
   cleanupTransformer,
+  openAccountTransformer,
   ...(PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [sectionsTransformer] : []),
   imageOverridesTransformer,
 ];

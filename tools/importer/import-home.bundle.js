@@ -772,6 +772,59 @@ var CustomImportScript = (() => {
     });
   }
 
+  // tools/importer/transformers/axisdirect-open-account.js
+  var TransformHook2 = {
+    beforeTransform: "beforeTransform",
+    afterTransform: "afterTransform"
+  };
+  var clean = (t) => (t || "").replace(/[​\s]+/g, " ").trim();
+  function transform4(hookName, element, payload) {
+    if (hookName !== TransformHook2.beforeTransform) return;
+    const { document: document2 } = payload;
+    const input = element.querySelector(
+      'form input[name="mobileNumber"], form input#mobileNumber, form input[inputmode="numeric"], form input[placeholder*="Mobile" i]'
+    );
+    if (!input) return;
+    const form = input.closest("form");
+    const label = form.querySelector(`label[for="${input.id}"]`) || form.querySelector("label");
+    const labelText = clean(label && label.textContent) || clean(input.getAttribute("placeholder"));
+    const placeholder = clean(input.getAttribute("placeholder")) || labelText;
+    const prefix = [...form.querySelectorAll("span, div, p")].map((e) => clean(e.textContent)).find((t) => /^\+\d{1,3}-?$/.test(t)) || "";
+    const submit = form.querySelector('button[type="submit"]') || form.querySelector("button");
+    const ctaText = clean(submit && submit.textContent);
+    const checkbox = form.querySelector('input[type="checkbox"]');
+    let terms = null;
+    if (checkbox) {
+      let row = checkbox.parentElement;
+      while (row && row !== form && !/accept|agree|terms/i.test(row.textContent)) row = row.parentElement;
+      const textEl = row && [...row.querySelectorAll("span")].find((s) => /accept|agree/i.test(s.textContent) && !s.contains(checkbox));
+      if (textEl) {
+        terms = document2.createElement("p");
+        [...textEl.childNodes].forEach((n) => {
+          if (n.nodeType === 1 && /^(button|a)$/i.test(n.tagName)) {
+            const em = document2.createElement("em");
+            em.textContent = clean(n.textContent);
+            terms.append(" ", em);
+          } else if (n.nodeType === 3 || n.nodeType === 1) {
+            terms.append(clean(n.textContent));
+          }
+        });
+        terms.normalize();
+      }
+    }
+    const out = [];
+    const p = (text) => {
+      const el = document2.createElement("p");
+      el.textContent = text;
+      out.push(el);
+    };
+    if (labelText) p(labelText);
+    p(clean(`${prefix} ${placeholder}`));
+    if (ctaText) p(ctaText);
+    if (terms) out.push(terms);
+    form.replaceWith(...out);
+  }
+
   // tools/importer/import-home.js
   var parsers = {
     "hero-carousel": parse,
@@ -846,6 +899,7 @@ var CustomImportScript = (() => {
   };
   var transformers = [
     transform,
+    transform4,
     ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform2] : [],
     transform3
   ];

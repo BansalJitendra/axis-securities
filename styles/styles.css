@@ -443,75 +443,65 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-chi
 
 /* field label */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(4) {
-  margin-top: 16px;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.4;
-  color: var(--text-color);
-}
-
-/* input row: "+91-" prefix + "Enter Mobile Number" field rendered as one
-   continuous bordered input. Floats avoid the inline-block whitespace gap
-   between the two separate <p> siblings. */
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(5),
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(6) {
-  box-sizing: border-box;
-  margin-top: 12px;
-  padding: 12px;
-  border: 1px solid var(--border-color);
-  background: var(--background-color);
+  margin-top: 18px;
   font-size: 14px;
   line-height: 20px;
-}
-
-/* "+91-" prefix — left segment */
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(5) {
-  float: left;
-  padding-right: 4px;
-  border-right: 0;
-  border-radius: 4px 0 0 4px;
   color: var(--text-color);
 }
 
-/* mobile-number field — right segment fills remaining width (BFC) */
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(6) {
-  overflow: hidden;
-  padding-left: 4px;
-  border-left: 0;
-  border-radius: 0 4px 4px 0;
-  color: var(--text-muted);
+/* the single mobile-number field: "+91- Enter Mobile Number" shown as the
+   source's outlined input (prefix + placeholder in grey) */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(5) {
+  box-sizing: border-box;
+  margin-top: 8px;
+  padding: 12px 11px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: #fff;
+  color: #6e6e6e;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: text;
 }
 
-/* Proceed button — full-width filled maroon CTA */
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(7) {
-  clear: both;
+/* Get OTP — the source's resting (disabled) state: grey filled button */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(6) {
   margin-top: 16px;
   padding: 16px;
   border-radius: 8px;
-  background: var(--brand-primary);
+  background: #b4b4b4;
   color: #fff;
   font-size: 16px;
   font-weight: 700;
   line-height: 24px;
   text-align: center;
-  cursor: pointer;
+  cursor: not-allowed;
 }
 
-/* Login / or / Resume row */
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(8),
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(9),
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(10) {
-  display: inline-block;
+/* terms line with an unticked checkbox in front */
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(7) {
+  position: relative;
   margin-top: 16px;
-  font-size: 14px;
-  line-height: 1.4;
+  padding-left: 26px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-color);
 }
 
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(8),
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(9) {
-  margin-right: 6px;
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(7)::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid currentcolor;
+  border-radius: 2px;
 }
 
-main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(9) {
-  color: var(--text-muted);
+main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(7) em {
+  color: #ed1164;
+  font-style: normal;
+  cursor: pointer;
 }
