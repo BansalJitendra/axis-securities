@@ -1,6 +1,8 @@
 /* Block: cards-segments -- design migrated from axisdirect.in homepage */
 
-/* Values extracted from source computed styles (getComputedStyle). */
+/* Values extracted from source computed styles (getComputedStyle).
+   Mobile: 3-column grid of 80px outlined icon tiles with the label below,
+   first six shown + View all toggle. Desktop (>= 900px): wrapped pills. */
 
 .cards-segments > ul {
   list-style: none;
@@ -10,46 +12,14 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
-  gap: 16px;
+  gap: 10px;
 }
 
-/* --- Segment pill tiles (base) --- */
-.cards-segments > ul > li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  background-color: var(--background-color);
-}
-
-.cards-segments > ul > li > .cards-segments-card-body {
-  margin: 0;
-  flex: 0 1 auto;
-}
-
-.cards-segments > ul > li > .cards-segments-card-body p {
-  margin: 0;
-}
-
-/* --- Heading row (first li): spans full width, no pill chrome --- */
+/* --- Heading row (first li): spans full width --- */
 .cards-segments > ul > li:first-child {
   flex: 0 0 100%;
-  display: block;
-  margin: 0 0 8px;
-  padding: 0;
-  border: 0;
-  background: none;
+  margin: 0 0 14px; /* + 10px row gap = 24px to the tiles */
   text-align: center;
-}
-
-.cards-segments > ul > li:first-child .cards-segments-card-body {
-  margin: 0;
-}
-
-.cards-segments > ul > li:first-child .cards-segments-card-body:empty {
-  display: none;
 }
 
 .cards-segments h2 {
@@ -57,34 +27,110 @@
   color: var(--text-color);
   font-family: var(--heading-font-family);
   font-weight: 700;
-  font-size: var(--heading-font-size-xl);
-  line-height: 1.31;
+  font-size: 17px;
+  line-height: 1.333;
+  letter-spacing: 0.16px;
   text-align: center;
+}
+
+/* accent words ("All Segments in One Account") are authored in <strong> */
+.cards-segments h2 strong {
+  color: var(--brand-primary);
+  font-weight: inherit;
+}
+
+/* --- Segment tiles (mobile) --- */
+.cards-segments > ul > li:not(:first-child) {
+  flex: 0 0 calc((100% - 20px) / 3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
 }
 
 .cards-segments .cards-segments-card-image {
   flex: 0 0 auto;
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  outline: 1px solid var(--border-color);
   line-height: 0;
+  overflow: hidden;
 }
 
 .cards-segments .cards-segments-card-image img {
-  width: 32px;
-  height: 32px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
 }
 
+.cards-segments > ul > li > .cards-segments-card-body {
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.cards-segments > ul > li > .cards-segments-card-body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.cards-segments > ul > li:first-child > .cards-segments-card-body {
+  margin: 0;
+}
+
+.cards-segments > ul > li:first-child > .cards-segments-card-body:empty {
+  display: none;
+}
+
 .cards-segments > ul > li a:any-link {
-  color: var(--text-color);
-  font-weight: 400;
-  font-size: var(--body-font-size-s);
-  line-height: 1.5;
+  color: #575757;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
   text-decoration: none;
-  white-space: nowrap;
 }
 
 .cards-segments > ul > li a:hover {
   color: var(--brand-primary);
   text-decoration: none;
+}
+
+/* first six tiles only until expanded */
+.cards-segments:not(.expanded) > ul > li.cards-segments-extra {
+  display: none;
+}
+
+/* View all / View less: pink uppercase text button with a chevron */
+.cards-segments .cards-segments-toggle {
+  display: flex;
+  align-items: center;
+  margin: 24px auto 0;
+  padding: 8px 4px;
+  border: 0;
+  background: none;
+  color: #ed1164;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.cards-segments .cards-segments-toggle::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  margin: -2px 0 0 8px;
+  background: currentcolor;
+  mask: url("/icons/ri-arrow-down-s-line.svg") center / contain no-repeat;
+}
+
+.cards-segments.expanded .cards-segments-toggle::after {
+  transform: rotate(180deg);
 }
 
 @media (width >= 900px) {
@@ -95,5 +141,58 @@
 
   .cards-segments > ul > li:first-child {
     margin-bottom: 16px;
+  }
+
+  .cards-segments h2 {
+    font-size: var(--heading-font-size-xl);
+    line-height: 1.31;
+    letter-spacing: normal;
+  }
+
+  /* --- Segment pill tiles --- */
+  .cards-segments > ul > li:not(:first-child) {
+    flex: 0 1 auto;
+    flex-direction: row;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background-color: var(--background-color);
+  }
+
+  .cards-segments .cards-segments-card-image {
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    outline: 0;
+    overflow: visible;
+  }
+
+  .cards-segments .cards-segments-card-image img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .cards-segments > ul > li > .cards-segments-card-body {
+    flex: 0 1 auto;
+    margin: 0;
+    text-align: start;
+  }
+
+  .cards-segments > ul > li a:any-link {
+    color: var(--text-color);
+    font-weight: 400;
+    font-size: var(--body-font-size-s);
+    line-height: 1.5;
+    letter-spacing: normal;
+    white-space: nowrap;
+  }
+
+  .cards-segments:not(.expanded) > ul > li.cards-segments-extra {
+    display: flex;
+  }
+
+  .cards-segments .cards-segments-toggle {
+    display: none;
   }
 }

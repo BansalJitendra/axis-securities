@@ -415,8 +415,31 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/cards-segments.js
+  function accentHeading(document2, source) {
+    const h = document2.createElement("h2");
+    const p = source.querySelector("p") || source;
+    const spans = [...p.children].filter((c) => c.tagName === "SPAN" && c.textContent.trim());
+    if (spans.length < 2) {
+      h.textContent = source.textContent.trim();
+      return h;
+    }
+    const styled2 = spans.some((s) => /color/i.test(s.getAttribute("style") || ""));
+    spans.forEach((s, i) => {
+      const style = s.getAttribute("style") || "";
+      const black = styled2 ? !/color/i.test(style) || /hsl\(\s*0\s*,\s*0%\s*,\s*0%\s*\)|#000\b|rgb\(\s*0,\s*0,\s*0\s*\)/i.test(style) : i === 0;
+      if (black) {
+        h.append(document2.createTextNode(s.textContent));
+      } else {
+        const strong = document2.createElement("strong");
+        strong.textContent = s.textContent.trim();
+        h.append(strong);
+      }
+    });
+    return h;
+  }
   function parse4(element, { document: document2 }) {
-    const sectionHeading = element.querySelector(":scope > h2, :scope > h1, h2");
+    const sourceHeading = element.querySelector(":scope > h2, :scope > h1, h2");
+    const sectionHeading = sourceHeading && accentHeading(document2, sourceHeading);
     let cardLinks = Array.from(element.querySelectorAll("a")).filter((a) => a.querySelector("img") || a.querySelector("h3, h2, h4"));
     if (!cardLinks.length) {
       cardLinks = Array.from(element.querySelectorAll(".mui-1owyt9z"));
@@ -632,7 +655,17 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/columns-appdownload.js
+  var SOURCE_ASSETS = "https://www.axisdirect.in/simplehai-assets";
+  function flightText(document2) {
+    const sources = [];
+    if (typeof window !== "undefined" && window.__IMPORT_FLIGHT_SCRIPTS__) sources.push(window.__IMPORT_FLIGHT_SCRIPTS__);
+    document2.querySelectorAll("script").forEach((s) => sources.push(s.textContent || ""));
+    return sources.join("\n").replace(/\\\//g, "/");
+  }
   function parse6(element, { document: document2 }) {
+    const flight = flightText(document2);
+    const mobileImgPath = (flight.match(/\/uploads\/[A-Za-z0-9_.-]*app_preview[A-Za-z0-9_.-]*\.(?:svg|png|jpe?g|webp)/) || [])[0];
+    const appLink = (flight.match(/https:\/\/onelink\.to\/[A-Za-z0-9]+/) || [])[0];
     const panels = Array.from(element.querySelectorAll(":scope > .mui-yrhiuv, :scope > .mui-ozins0"));
     let appPanels = panels;
     if (!appPanels.length) {
@@ -649,11 +682,28 @@ var CustomImportScript = (() => {
     const columnCount = appPanels.length || 2;
     if (leadImage) {
       const introRow = [leadImage];
+      if (mobileImgPath && columnCount > 1) {
+        const mobileImg = document2.createElement("img");
+        mobileImg.setAttribute("src", `${SOURCE_ASSETS}${mobileImgPath}`);
+        mobileImg.setAttribute("alt", leadImage.getAttribute("alt") || "Axis Direct Investor App home screen on a phone");
+        introRow.push(mobileImg);
+      }
       while (introRow.length < columnCount) introRow.push("");
       cells.push(introRow);
     }
     if (appPanels.length) {
-      cells.push(appPanels.map((panel) => panel));
+      cells.push(appPanels.map((panel) => {
+        const title = panel.querySelector("h1, h2, h3");
+        if (appLink && title) {
+          const p = document2.createElement("p");
+          const a = document2.createElement("a");
+          a.setAttribute("href", appLink);
+          a.textContent = `Download the ${title.textContent.replace(/^\s*Get the\s*/i, "").trim()}`;
+          p.append(a);
+          title.after(p);
+        }
+        return panel;
+      }));
     }
     const block = WebImporter.Blocks.createBlock(document2, { name: "columns-appdownload", cells });
     element.replaceWith(block);
@@ -745,7 +795,9 @@ var CustomImportScript = (() => {
     // Key Features icons over the size limit
     "track-investments": `${PNG_BASE}/home/track-investments.png`,
     "margin-trading-facility": `${PNG_BASE}/home/margin-trading-facility.png`,
-    "after-market-order": `${PNG_BASE}/home/after-market-order.png`
+    "after-market-order": `${PNG_BASE}/home/after-market-order.png`,
+    // App-download mobile illustration (447 KB)
+    "investor-app-preview": `${PNG_BASE}/app-download-mobile.png`
   };
   function svgStem(src) {
     if (!src) return null;
@@ -867,7 +919,7 @@ var CustomImportScript = (() => {
       },
       {
         name: "columns-appdownload",
-        instances: [".mui-o9n91k"]
+        instances: ["#main-content div:has(> img + div h3)"]
       }
     ],
     sections: [
@@ -890,7 +942,7 @@ var CustomImportScript = (() => {
       {
         id: "rc4",
         name: "App Download",
-        selector: [".mui-o9n91k"],
+        selector: ["#main-content div:has(> img + div h3)"],
         style: null,
         blocks: ["columns-appdownload"],
         defaultContent: []

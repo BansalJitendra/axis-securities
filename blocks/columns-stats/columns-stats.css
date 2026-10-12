@@ -6,8 +6,8 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0;
-  padding: 32px 24px 0; /* source ends right after the last label */
+  gap: 24px;
+  padding: 24px 32px 0; /* + 16px section gutter = source 48px; ends right after the last label */
   border-radius: 16px 16px 0 0;
 }
 
@@ -16,17 +16,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 28px;
+  padding: 0 28px;
 }
 
 /* Separators between cells — source uses 2px #f1f1f1 dividers.
    Horizontal on mobile (stacked), vertical on desktop (row). */
 .columns-stats .columns-stats-item:not(:last-child) {
+  padding-bottom: 24px;
   border-bottom: 2px solid #f1f1f1;
-}
-
-.columns-stats .columns-stats-item:last-child {
-  padding-bottom: 0;
 }
 
 /* Big value graphic (e.g. "₹0", "₹20/order", "5M+"). */
@@ -51,6 +48,10 @@
   gap: 8px;
 }
 
+.columns-stats .columns-stats-caption picture {
+  line-height: 0;
+}
+
 .columns-stats .columns-stats-caption img {
   width: 32px;
   height: 32px;
@@ -59,9 +60,9 @@
 
 .columns-stats .columns-stats-label {
   font-family: var(--body-font-family);
-  font-size: 19.8px;
+  font-size: 18px;
   font-weight: 700;
-  line-height: 25.74px;
+  line-height: 23.4px;
   letter-spacing: 0.16px;
   color: var(--text-color);
 }
@@ -71,16 +72,23 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: stretch;
+    gap: 0;
     padding: 48px;
   }
 
   .columns-stats .columns-stats-item {
     flex: 1;
-    padding-bottom: 0;
+    padding: 24px 28px 0;
   }
 
   .columns-stats .columns-stats-item:not(:last-child) {
+    padding-bottom: 0;
     border-bottom: 0;
     border-right: 2px solid #f1f1f1;
+  }
+
+  .columns-stats .columns-stats-label {
+    font-size: 19.8px;
+    line-height: 25.74px;
   }
 }

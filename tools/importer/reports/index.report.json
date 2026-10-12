@@ -2,7 +2,7 @@
   "status": "success",
   "url": "https://www.axisdirect.in/",
   "path": "index",
-  "timestamp": "2026-10-12T13:47:02.863Z",
+  "timestamp": "2026-10-12T14:28:26.138Z",
   "title": "Online Trading & Investment Platform India | Axis Direct",
   "template": "home",
   "blocks": [
@@ -11,6 +11,7 @@
     "widget",
     "columns-stats",
     "cards-segments",
-    "cards-features"
+    "cards-features",
+    "columns-appdownload"
   ]
 }

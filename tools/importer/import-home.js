@@ -59,7 +59,7 @@ const PAGE_TEMPLATE = {
     },
     {
       name: 'columns-appdownload',
-      instances: ['.mui-o9n91k']
+      instances: ['#main-content div:has(> img + div h3)']
     }
   ],
   sections: [
@@ -82,7 +82,7 @@ const PAGE_TEMPLATE = {
     {
       id: 'rc4',
       name: 'App Download',
-      selector: ['.mui-o9n91k'],
+      selector: ['#main-content div:has(> img + div h3)'],
       style: null,
       blocks: ['columns-appdownload'],
       defaultContent: []

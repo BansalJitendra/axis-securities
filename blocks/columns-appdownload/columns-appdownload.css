@@ -1,5 +1,7 @@
 /* columns-appdownload — two app-download cards over a full-width illustration band.
-   Values extracted from source computed styles (https://www.axisdirect.in/ .mui-o9n91k). */
+   Values extracted from source computed styles (https://www.axisdirect.in/ .mui-o9n91k).
+   Mobile: portrait phone illustration with the cards as a swipe carousel
+   overlapping its lower half. Desktop (>= 900px): wide band, cards overlaid. */
 
 /* Full-bleed cream band: override the section's max-width wrapper. */
 main .section > .columns-appdownload-wrapper {
@@ -19,68 +21,101 @@ main .section > .columns-appdownload-wrapper {
   display: block;
 }
 
-.columns-appdownload .appdownload-illo-empty {
+.columns-appdownload .appdownload-illo-empty,
+.columns-appdownload .columns-appdownload-img-col {
   display: none;
 }
 
-.columns-appdownload .columns-appdownload-img-col {
+.columns-appdownload .columns-appdownload-img-mobile {
   display: block;
 }
 
 .columns-appdownload .columns-appdownload-img-col picture,
-.columns-appdownload .columns-appdownload-img-col img {
+.columns-appdownload .columns-appdownload-img-col img,
+.columns-appdownload .columns-appdownload-img-mobile picture {
   display: block;
   width: 100%;
   height: auto;
 }
 
-/* --- Cards (row 2) --- */
+/* source: 390 x 621 panel, illustration contained */
+.columns-appdownload .columns-appdownload-img-mobile img {
+  display: block;
+  width: 100%;
+  height: 621px;
+  object-fit: contain;
+}
+
+/* no portrait illustration authored: show the wide one */
+.columns-appdownload .appdownload-illo:not(:has(.columns-appdownload-img-mobile)) .columns-appdownload-img-col {
+  display: block;
+}
+
+/* --- Cards (row 2): mobile swipe carousel --- */
 .columns-appdownload .appdownload-cards {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  left: 0;
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 24px 16px 32px;
+  gap: 16px;
+  padding: 0 calc((100% - 280px) / 2) 54px; /* centred card; room for dots + shadow */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.columns-appdownload .appdownload-cards::-webkit-scrollbar {
+  display: none;
 }
 
 .columns-appdownload .appdownload-card {
   display: flex;
+  flex: 0 0 280px;
   flex-direction: column;
   gap: 16px;
   box-sizing: border-box;
-  padding: 24px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   background-color: #fff;
   box-shadow: rgb(74 29 50 / 32%) 0 16px 24px 0;
+  scroll-snap-align: center;
 }
 
-/* Card header: icon + title */
+.columns-appdownload .appdownload-card.active {
+  border-color: rgb(241 70 135);
+}
+
+/* Card header: icon + title (+ chevron link on mobile) */
 .columns-appdownload .appdownload-head {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   margin: 0;
 }
 
 .columns-appdownload .appdownload-icon {
   flex: 0 0 auto;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
 }
 
 .columns-appdownload .appdownload-icon img {
   display: block;
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
 .columns-appdownload .appdownload-head h3 {
   margin: 0;
   font-family: var(--heading-font-family);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 23.4px;
+  letter-spacing: 0.16px;
   color: var(--text-color);
 }
 
@@ -91,16 +126,25 @@ main .section > .columns-appdownload-wrapper {
   color: var(--brand-primary);
 }
 
+.columns-appdownload .appdownload-go {
+  flex: 0 0 24px;
+  height: 24px;
+  margin-left: auto;
+  background: var(--text-color);
+  mask: url("/icons/ri-arrow-right-s-line.svg") center / contain no-repeat;
+}
+
 /* Description */
 .columns-appdownload .appdownload-desc {
   margin: 0;
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
+  letter-spacing: 0.24px;
   color: var(--text-color);
 }
 
-/* QR + ratings row */
+/* QR + ratings row: mobile shows the two rating pills side by side, no QR */
 .columns-appdownload .appdownload-qr-row {
   display: flex;
   flex-direction: row;
@@ -109,8 +153,9 @@ main .section > .columns-appdownload-wrapper {
   margin: 0;
 }
 
-.columns-appdownload .appdownload-qr {
-  flex: 0 0 auto;
+.columns-appdownload .appdownload-qr,
+.columns-appdownload .appdownload-scan {
+  display: none;
 }
 
 .columns-appdownload .appdownload-qr img {
@@ -121,8 +166,10 @@ main .section > .columns-appdownload-wrapper {
 
 .columns-appdownload .appdownload-ratings {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 /* Rating pill */
@@ -130,13 +177,14 @@ main .section > .columns-appdownload-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   box-sizing: border-box;
   width: fit-content;
   padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background-color: transparent;
+  line-height: 24px;
   text-decoration: none;
 }
 
@@ -155,13 +203,14 @@ main .section > .columns-appdownload-wrapper {
 .columns-appdownload .appdownload-rating-num {
   font-size: 16px;
   font-weight: 700;
+  letter-spacing: 0.24px;
   color: var(--brand-accent);
 }
 
 .columns-appdownload .appdownload-rating-word {
-  margin-left: -6px; /* 2px between number and word (pill gap is 8px) */
   font-size: 16px;
   font-weight: 700;
+  letter-spacing: 0.24px;
   color: #575757;
 }
 
@@ -172,6 +221,34 @@ main .section > .columns-appdownload-wrapper {
   font-weight: 400;
   color: var(--text-muted);
   text-align: center;
+}
+
+/* Carousel dots (same look as the other carousels on the page) */
+.columns-appdownload .appdownload-dots {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 24px;
+}
+
+.columns-appdownload .appdownload-dot {
+  width: 6px;
+  height: 6px;
+  margin: 2px;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  background: #b4b4b4;
+  cursor: pointer;
+}
+
+.columns-appdownload .appdownload-dot.active {
+  width: 16px;
+  background: var(--brand-accent);
 }
 
 /* --- Desktop: overlay cards on the illustration diagonally ---
@@ -189,6 +266,16 @@ main .section > .columns-appdownload-wrapper {
     grid-area: 1 / 1;
   }
 
+  .columns-appdownload .columns-appdownload-img-col {
+    display: block;
+  }
+
+  .columns-appdownload .columns-appdownload-img-mobile,
+  .columns-appdownload .appdownload-go,
+  .columns-appdownload .appdownload-dots {
+    display: none;
+  }
+
   .columns-appdownload .columns-appdownload-img-col img {
     aspect-ratio: 1440 / 484;
     object-fit: cover;
@@ -196,17 +283,67 @@ main .section > .columns-appdownload-wrapper {
 
   .columns-appdownload .appdownload-cards {
     position: relative;
+    inset: auto;
     display: grid;
     grid-template-columns: 9.6% 300px 1fr 300px 9.6%;
     align-items: start;
     gap: 0;
     padding: 0;
+    overflow: visible;
     pointer-events: none;
   }
 
   .columns-appdownload .appdownload-card {
     width: 300px;
+    padding: 24px;
+    border: 0;
     pointer-events: auto;
+  }
+
+  .columns-appdownload .appdownload-head {
+    gap: 16px;
+  }
+
+  .columns-appdownload .appdownload-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .columns-appdownload .appdownload-head h3 {
+    font-size: 20px;
+    line-height: 1.3;
+    letter-spacing: normal;
+  }
+
+  .columns-appdownload .appdownload-desc,
+  .columns-appdownload .appdownload-rating-num,
+  .columns-appdownload .appdownload-rating-word {
+    letter-spacing: normal;
+  }
+
+  .columns-appdownload .appdownload-qr {
+    display: block;
+    flex: 0 0 auto;
+  }
+
+  .columns-appdownload .appdownload-scan {
+    display: block;
+  }
+
+  .columns-appdownload .appdownload-ratings {
+    flex: 0 1 auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .columns-appdownload .appdownload-pill {
+    gap: 8px;
+    line-height: inherit;
+  }
+
+  .columns-appdownload .appdownload-rating-word {
+    margin-left: -6px; /* 2px between number and word (pill gap is 8px) */
   }
 
   /* Vertical offsets are 32% / 8% of the illustration height, expressed in

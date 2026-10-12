@@ -45,6 +45,8 @@ const OVERRIDES = {
   'track-investments': `${PNG_BASE}/home/track-investments.png`,
   'margin-trading-facility': `${PNG_BASE}/home/margin-trading-facility.png`,
   'after-market-order': `${PNG_BASE}/home/after-market-order.png`,
+  // App-download mobile illustration (447 KB)
+  'investor-app-preview': `${PNG_BASE}/app-download-mobile.png`,
 };
 
 /** "…/uploads/all_in_one_roof_web_hb-20251118-061323.svg" -> "all-in-one-roof-web-hb" */

@@ -458,7 +458,13 @@ function decoratePlatforms(block) {
   tabRow.setAttribute('role', 'tablist');
   tabRow.setAttribute('aria-label', 'Platforms');
   const tabs = panes.map((p, i) => {
-    const tab = createEl('button', 'widget-platform-tab', p.name);
+    const tab = createEl('button', 'widget-platform-tab');
+    // mobile shows only the last word ("App", "App", "Terminal") like the
+    // source; the leading words stay in the accessible name
+    const words = p.name.split(/\s+/);
+    const last = words.pop();
+    if (words.length) tab.append(createEl('span', 'widget-platform-tab-lead', `${words.join(' ')} `));
+    tab.append(last);
     tab.type = 'button';
     tab.id = `${uid}-p${i}-tab`;
     tab.setAttribute('role', 'tab');

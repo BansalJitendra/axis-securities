@@ -30,6 +30,62 @@ function buildPill(badgeP, ratingP) {
   return pill;
 }
 
+/**
+ * Mobile: the cards row is a horizontal scroll-snap carousel (one centred card,
+ * the next peeking in) with dots, an active-card highlight and autoplay, like
+ * the source. Desktop CSS lays the cards out statically and hides the dots.
+ */
+function initCarousel(block, row) {
+  const cards = [...row.children];
+  if (cards.length < 2) return;
+  const dots = document.createElement('div');
+  dots.className = 'appdownload-dots';
+  const buttons = cards.map((card, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'appdownload-dot';
+    dot.setAttribute('aria-label', `Show app ${i + 1} of ${cards.length}`);
+    dots.append(dot);
+    return dot;
+  });
+  block.append(dots);
+
+  let active = -1;
+  const setActive = (idx) => {
+    if (idx === active) return;
+    active = idx;
+    cards.forEach((c, i) => c.classList.toggle('active', i === idx));
+    buttons.forEach((b, i) => b.classList.toggle('active', i === idx));
+  };
+  const goTo = (idx) => {
+    const card = cards[idx];
+    row.scrollTo({ left: card.offsetLeft - (row.clientWidth - card.offsetWidth) / 2, behavior: 'smooth' });
+  };
+  const nearest = () => {
+    const mid = row.scrollLeft + row.clientWidth / 2;
+    let best = 0;
+    cards.forEach((c, i) => {
+      const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid);
+      if (d < Math.abs(cards[best].offsetLeft + cards[best].offsetWidth / 2 - mid)) best = i;
+    });
+    return best;
+  };
+  row.addEventListener('scroll', () => setActive(nearest()), { passive: true });
+  buttons.forEach((b, i) => b.addEventListener('click', () => goTo(i)));
+  setActive(0);
+
+  const mobile = window.matchMedia('(width < 900px)');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let timer;
+  const stop = () => { clearInterval(timer); timer = null; };
+  ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach((ev) => row.addEventListener(ev, stop, { once: true, passive: true }));
+  if (!still.matches) {
+    timer = setInterval(() => {
+      if (mobile.matches && !document.hidden) goTo((active + 1) % cards.length);
+    }, 5000);
+  }
+}
+
 function decorateCard(card) {
   const kids = [...card.children];
   const h3 = card.querySelector('h3');
@@ -40,10 +96,15 @@ function decorateCard(card) {
     : kids.find((k) => k.querySelector('picture') && !k.querySelector('a'));
   const after = titleIdx >= 0 ? kids.slice(titleIdx + 1) : kids;
 
+  // optional "get the app" link right after the title (mobile chevron)
+  const next = h3 && h3.nextElementSibling;
+  const goP = next && next.tagName === 'P' && next.querySelector('a')
+    && !next.querySelector('picture') && !/\d/.test(next.textContent) ? next : null;
+
   const desc = after.find((k) => k.tagName === 'P'
     && !k.querySelector('picture') && !k.querySelector('a'));
   const qrP = after.find((k) => k.querySelector('picture') && !k.querySelector('a'));
-  const badgeParas = after.filter((k) => k.querySelector('a'));
+  const badgeParas = after.filter((k) => k.querySelector('a') && k !== goP);
   // last text-only paragraph = "Scan to Download"
   const textOnly = after.filter((k) => k.tagName === 'P'
     && !k.querySelector('picture') && !k.querySelector('a'));
@@ -64,6 +125,14 @@ function decorateCard(card) {
     }
   }
   if (h3) header.appendChild(h3);
+  if (goP) {
+    const link = goP.querySelector('a');
+    const go = document.createElement('a');
+    go.className = 'appdownload-go';
+    go.href = link.href;
+    go.setAttribute('aria-label', link.textContent.trim());
+    header.appendChild(go);
+  }
 
   // qr row: qr image + ratings column of pills
   const qrRow = document.createElement('div');
@@ -97,10 +166,11 @@ export default function decorate(block) {
   const illoRow = rows[0];
   if (illoRow) {
     illoRow.classList.add('appdownload-illo');
-    [...illoRow.children].forEach((cell) => {
+    [...illoRow.children].forEach((cell, i) => {
       const pic = cell.querySelector('picture');
       if (pic && cell.children.length === 1) {
-        cell.classList.add('columns-appdownload-img-col');
+        // second picture = portrait illustration shown on mobile
+        cell.classList.add(i === 0 ? 'columns-appdownload-img-col' : 'columns-appdownload-img-mobile');
       } else if (!pic) {
         cell.classList.add('appdownload-illo-empty');
       }
@@ -116,5 +186,6 @@ export default function decorate(block) {
       card.classList.add(i === 0 ? 'appdownload-card-investor' : 'appdownload-card-trader');
       decorateCard(card);
     });
+    initCarousel(block, cardsRow);
   }
 }

@@ -303,16 +303,59 @@ main > .section {
 main > .section > div {
   max-width: 1600px;
   margin: auto;
-  padding: 0 24px;
+  padding: 0 16px; /* source mobile gutter */
 }
 
 main > .section:first-of-type {
   margin-top: 0;
 }
 
+/* an empty trailing section (stray section break) adds no gap */
+main > .section:empty {
+  margin: 0;
+}
+
+/* mobile: the account card sits 16px under the hero (its own margin), not a
+   full 40px section gap */
+main > .section.hero-carousel-container {
+  margin-bottom: 0;
+}
+
+main > .section.hero-carousel-container + .section {
+  margin-top: 0;
+}
+
+/* mobile: the app-download panel butts against the Key Features band above
+   and the footer below (source) */
+main > .section.columns-appdownload-container,
+main > .section:has(+ .section.columns-appdownload-container) {
+  margin-bottom: 0;
+}
+
+main > .section.columns-appdownload-container {
+  margin-top: 0;
+}
+
 @media (width >= 900px) {
   main > .section > div {
     padding: 0 32px;
+  }
+
+  main > .section.hero-carousel-container {
+    margin-bottom: 40px;
+  }
+
+  main > .section.hero-carousel-container + .section {
+    margin-top: 40px;
+  }
+
+  main > .section.columns-appdownload-container,
+  main > .section:has(+ .section.columns-appdownload-container) {
+    margin-bottom: 40px;
+  }
+
+  main > .section.columns-appdownload-container {
+    margin-top: 40px;
   }
 }
 
@@ -399,6 +442,11 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) {
     top: 90px;
     z-index: 5;
   }
+
+  main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
+    font-size: 20px;
+    letter-spacing: normal;
+  }
 }
 
 /* reset default heading/paragraph margins inside the card */
@@ -411,9 +459,10 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > * {
 main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
   grid-column: 1;
   grid-row: 1;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.3;
+  letter-spacing: 0.16px;
   color: var(--text-color);
 }
 
@@ -424,7 +473,7 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-chi
   margin-top: 8px;
   font-size: 14px;
   line-height: 20px;
-  color: var(--text-color);
+  color: #575757;
 }
 
 /* icon (88 x 88 in source) */
@@ -443,7 +492,7 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-chi
 
 /* field label */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(4) {
-  margin-top: 18px;
+  margin-top: 16px;
   font-size: 14px;
   line-height: 20px;
   color: var(--text-color);
@@ -485,6 +534,7 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-chi
   padding-left: 26px;
   font-size: 12px;
   line-height: 18px;
+  letter-spacing: 0.32px;
   color: var(--text-color);
 }
 
@@ -500,7 +550,9 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-chi
   border-radius: 2px;
 }
 
+/* the link wraps as one unit, like the source's inline button */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(7) em {
+  display: inline-block;
   color: #ed1164;
   font-style: normal;
   cursor: pointer;

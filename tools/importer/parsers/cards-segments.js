@@ -10,12 +10,44 @@
  * CTA). Source is a carousel of segment tiles, each an <a> wrapping an icon image
  * and an <h3> title. We emit one 2-column row per segment.
  */
+
+/**
+ * "<h2><p><span style=color:hsl(0,0%,0%)>Unified Access to </span>
+ *  <span style=color:hsl(334,…)>All Segments in One Account</span></p></h2>"
+ * → <h2>Unified Access to <strong>All Segments in One Account</strong></h2>
+ * (accent = coloured, non-black span; same convention as cards-features/widget).
+ * When inline styles were stripped, the rich-text runs are still separate
+ * sibling spans inside the <p>: the first run is plain, later runs are accent.
+ */
+function accentHeading(document, source) {
+  const h = document.createElement('h2');
+  const p = source.querySelector('p') || source;
+  const spans = [...p.children].filter((c) => c.tagName === 'SPAN' && c.textContent.trim());
+  if (spans.length < 2) { h.textContent = source.textContent.trim(); return h; }
+  const styled = spans.some((s) => /color/i.test(s.getAttribute('style') || ''));
+  spans.forEach((s, i) => {
+    const style = s.getAttribute('style') || '';
+    const black = styled
+      ? !/color/i.test(style) || /hsl\(\s*0\s*,\s*0%\s*,\s*0%\s*\)|#000\b|rgb\(\s*0,\s*0,\s*0\s*\)/i.test(style)
+      : i === 0;
+    if (black) {
+      h.append(document.createTextNode(s.textContent));
+    } else {
+      const strong = document.createElement('strong');
+      strong.textContent = s.textContent.trim();
+      h.append(strong);
+    }
+  });
+  return h;
+}
+
 export default function parse(element, { document }) {
   // Optional section heading. It belongs to this block's content, so it must be
   // captured inside the block (not left as a sibling, which would drop it from the
   // content-completeness score). Placed as the first row with an empty second cell
   // to keep the 2-column shape consistent.
-  const sectionHeading = element.querySelector(':scope > h2, :scope > h1, h2');
+  const sourceHeading = element.querySelector(':scope > h2, :scope > h1, h2');
+  const sectionHeading = sourceHeading && accentHeading(document, sourceHeading);
 
   // Each segment card is an anchor containing an icon image + an <h3> title.
   let cardLinks = Array.from(element.querySelectorAll('a'))
