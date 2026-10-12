@@ -39,102 +39,387 @@
 
 /* ------------------------------------------------------------------ */
 
-.widget-recommendations .widget-reco-lead {
-  margin: 0 0 16px;
-  font-size: var(--body-font-size-s); /* 16px */
+/* Values from the source computed styles (axisdirect.in "Latest Recommendations"). */
+.widget.widget-recommendations {
+  --reco-teal: rgb(22 89 100);
+  --reco-teal-border: rgb(129 193 189);
+  --reco-teal-bg: rgb(235 249 248);
+  --reco-muted: #575757;
+
+  margin: 32px 0;
+}
+
+.widget-recommendations > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Header: rule — title — rule, lead underneath */
+.widget-reco-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.widget-reco-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.widget-reco-rule {
+  flex: 0 0 36px;
+  height: 0;
+  border-top: 2px solid var(--brand-primary);
+}
+
+.widget.widget-recommendations h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  color: #000;
+}
+
+.widget-reco-accent {
+  color: #99144e;
+}
+
+.widget-reco-lead {
+  position: relative;
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.16px;
   color: var(--text-color);
 }
 
-.widget-recommendations .widget-reco-lead img {
-  width: 32px;
-  height: 32px;
-  vertical-align: middle;
-  margin-right: 8px;
+/* Decorative squiggle beside the lead (desktop only) */
+.widget-reco-squiggle {
+  display: none;
 }
 
-/* Card carousel — a single horizontal, scroll-snapping row of tiles
-   (matches the source, which scrolls the cards rather than wrapping them). */
+/* Carousel — bleeds past the section's 24px side padding on mobile so the
+   neighbouring cards peek in from the screen edges, as on the source. */
+.widget-reco-carousel {
+  width: calc(100% + 48px);
+  min-width: 0;
+  margin: 0 -24px;
+}
+
+.widget-reco-viewport {
+  overflow: hidden;
+  padding-top: 6px; /* room for the badge that overhangs the card body */
+}
+
 .widget-reco-cards {
   display: flex;
-  flex-wrap: nowrap;
   gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding-bottom: 8px; /* room for the scrollbar without clipping cards */
-  scrollbar-width: thin;
+  transition: transform 0.5s ease;
 }
 
-/* Card — teal border, 16px radius, 16px padding (from source); fixed width so
-   the row scrolls horizontally like the source carousel. */
+/* Card */
 .widget-reco-card {
+  position: relative;
   flex: 0 0 216px;
-  scroll-snap-align: start;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  border: 1px solid rgb(129 193 189);
+  border: 1px solid var(--reco-teal-border);
   border-radius: 16px;
-  padding: 16px;
   background: var(--background-color);
+  color: var(--text-color);
 }
 
 .widget-reco-card p {
   margin: 0;
 }
 
-/* Percentage headline — teal-dark, large */
+.widget-reco-card-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 15px 15px 0 0;
+  background: var(--reco-teal-bg);
+}
+
 .widget-reco-pct {
+  display: flex;
+  align-items: center;
+  color: var(--reco-teal);
   font-weight: 700;
-  font-size: 28px;
-  line-height: 1.2;
-  color: rgb(22 89 100);
 }
 
-/* "Potential Returns" caption and per-row stats */
+.widget-reco-pct-num {
+  font-size: 31.2px;
+  line-height: 40.95px;
+}
+
+.widget-reco-pct-unit {
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+  margin-top: 6px;
+}
+
+.widget-reco-returns {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: end;
+}
+
 .widget-reco-caption,
-.widget-reco-stat {
-  font-size: var(--body-font-size-xs); /* 14px */
-  font-weight: 400;
-  line-height: 1.4;
-  color: rgb(87 87 87);
+.widget-reco-horizon-in {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
+  color: var(--reco-muted);
 }
 
-/* Buy badge image */
+.widget-reco-horizon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0.24px;
+}
+
+.widget-reco-card-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px 16px 24px;
+}
+
+/* faint bull watermark behind the body (source: 20% opacity) */
+.widget-reco-card-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('reco-watermark.svg') no-repeat 50% 50%;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 .widget-reco-badge {
-  margin: 4px 0;
+  position: absolute;
+  top: -3px;
+  right: 10px;
+  z-index: 1;
+  margin: 0;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .widget-reco-badge img {
-  width: auto;
-  height: 22px;
+  display: block;
+  width: 62px;
+  height: 20px;
+  object-fit: contain;
 }
 
-/* Stock name row */
 .widget-reco-name {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--body-font-size-xs);
+  min-height: 24px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--text-color);
+  line-height: 20px;
+  letter-spacing: 0.24px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
+.widget-reco-name picture,
 .widget-reco-name img {
-  width: auto;
-  height: 28px;
-  border-radius: 4px;
+  display: block;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
-/* "Login to view more" pseudo-link */
-.widget-reco-more {
-  margin: 16px 0 0;
+.widget-reco-stats {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
+  gap: 24px 16px;
+}
+
+.widget-reco-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  letter-spacing: 0.32px;
+}
+
+.widget-reco-stat:nth-child(even) {
+  align-items: flex-end;
+}
+
+.widget-reco-stat-label {
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--reco-muted);
+}
+
+.widget-reco-stat-value {
   font-size: 12px;
   font-weight: 700;
+  line-height: 18px;
+}
+
+.widget-reco-blur {
+  filter: blur(3px);
+  user-select: none;
+}
+
+/* Controls: arrows (desktop) + progress dots */
+.widget-reco-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.widget-reco-arrow {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--light-color, #f9f9f9);
   color: var(--brand-accent);
   cursor: pointer;
+}
+
+.widget-reco-arrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+}
+
+.widget-reco-prev::before {
+  transform: rotate(135deg);
+  margin-left: 3px;
+}
+
+.widget-reco-next::before {
+  transform: rotate(-45deg);
+  margin-right: 3px;
+}
+
+.widget-reco-dots {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.widget-reco-dot {
+  width: 6px;
+  height: 6px;
+  margin: 2px;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(var(--brand-accent), var(--brand-accent)) no-repeat 0 0 / 0 100%, #b4b4b4;
+  cursor: pointer;
+}
+
+.widget-reco-dot.active {
+  width: 20px;
+  background-size: 100% 100%, auto;
+  animation: widget-reco-progress var(--widget-reco-autoplay, 5000ms) linear;
+}
+
+.widget-reco-controls.paused .widget-reco-dot.active {
+  animation-play-state: paused;
+}
+
+@keyframes widget-reco-progress {
+  from { background-size: 0 100%, auto; }
+  to { background-size: 100% 100%, auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .widget-reco-cards {
+    transition: none;
+  }
+
+  .widget-reco-dot.active {
+    animation: none;
+  }
+}
+
+/* "Login to view more" */
+.widget-reco-more {
+  align-self: stretch;
+  margin: -24px 0 0; /* 8px below the controls (container gap is 32px) */
+  padding: 8px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--brand-accent);
+  cursor: pointer;
+}
+
+@media (width >= 900px) {
+  .widget.widget-recommendations {
+    margin: 0;
+    padding: 48px 0 48px 48px;
+  }
+
+  .widget-reco-carousel {
+    width: 100%;
+    margin: 0;
+  }
+
+  .widget-reco-title {
+    gap: 32px;
+  }
+
+  .widget-reco-rule {
+    flex-basis: 200px;
+  }
+
+  .widget.widget-recommendations h2 {
+    font-size: 31.2px;
+    line-height: 40.95px;
+  }
+
+  .widget-reco-squiggle {
+    display: block;
+    position: absolute;
+    top: -19px;
+    left: -95px;
+  }
+
+  .widget-reco-squiggle img {
+    display: block;
+    width: 63px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .widget-reco-arrow {
+    display: inline-flex;
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -217,6 +502,7 @@
   white-space: nowrap;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .widget-platforms h2 {
   margin-top: 12px;
 }

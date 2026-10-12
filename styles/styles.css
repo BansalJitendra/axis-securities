@@ -375,10 +375,13 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) {
     grid-column: 1;
   }
 
-  /* the account card occupies the right column, spanning all rows, and sticks */
+  /* the account card occupies the right column, spanning all rows, and sticks.
+     The rows are implicit, so `1 / -1` would collapse to row 1 alone and
+     stretch that row to the card's height (a gap under the stats block);
+     span generously instead — unused implicit rows size to 0. */
   main .section > .default-content-wrapper:has(> h2#open-your-account) {
     grid-column: 2;
-    grid-row: 1 / -1;
+    grid-row: 1 / span 20;
     max-width: none;
     margin: 0;
     position: sticky;

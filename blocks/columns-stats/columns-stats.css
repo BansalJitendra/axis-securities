@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: stretch;
   gap: 0;
-  padding: 32px 24px;
+  padding: 32px 24px 0; /* source ends right after the last label */
   border-radius: 16px 16px 0 0;
 }
 
@@ -23,6 +23,10 @@
    Horizontal on mobile (stacked), vertical on desktop (row). */
 .columns-stats .columns-stats-item:not(:last-child) {
   border-bottom: 2px solid #f1f1f1;
+}
+
+.columns-stats .columns-stats-item:last-child {
+  padding-bottom: 0;
 }
 
 /* Big value graphic (e.g. "₹0", "₹20/order", "5M+"). */
@@ -72,6 +76,7 @@
 
   .columns-stats .columns-stats-item {
     flex: 1;
+    padding-bottom: 0;
   }
 
   .columns-stats .columns-stats-item:not(:last-child) {
