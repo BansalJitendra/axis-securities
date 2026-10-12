@@ -27,6 +27,7 @@ main .section > .columns-appdownload-wrapper {
   display: block;
 }
 
+.columns-appdownload .columns-appdownload-img-col picture,
 .columns-appdownload .columns-appdownload-img-col img {
   display: block;
   width: 100%;
@@ -158,48 +159,67 @@ main .section > .columns-appdownload-wrapper {
 }
 
 .columns-appdownload .appdownload-rating-word {
+  margin-left: -6px; /* 2px between number and word (pill gap is 8px) */
   font-size: 16px;
-  font-weight: 400;
-  color: var(--text-color);
+  font-weight: 700;
+  color: #575757;
 }
 
 /* Scan to Download */
 .columns-appdownload .appdownload-scan {
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--text-muted);
+  text-align: center;
 }
 
-/* --- Desktop: overlay cards on the illustration diagonally --- */
+/* --- Desktop: overlay cards on the illustration diagonally ---
+   Illustration and cards share one grid cell, so the block is always as tall
+   as the taller of the two — cards can never spill into the next section
+   (e.g. if the illustration fails to load or the cards grow). */
 @media (width >= 900px) {
+  .columns-appdownload {
+    display: grid;
+    container-type: inline-size;
+  }
+
+  .columns-appdownload .appdownload-illo,
+  .columns-appdownload .appdownload-cards {
+    grid-area: 1 / 1;
+  }
+
   .columns-appdownload .columns-appdownload-img-col img {
     aspect-ratio: 1440 / 484;
     object-fit: cover;
   }
 
   .columns-appdownload .appdownload-cards {
-    position: absolute;
-    inset: 0;
-    flex-direction: row;
+    position: relative;
+    display: grid;
+    grid-template-columns: 9.6% 300px 1fr 300px 9.6%;
+    align-items: start;
     gap: 0;
     padding: 0;
     pointer-events: none;
   }
 
   .columns-appdownload .appdownload-card {
-    position: absolute;
     width: 300px;
     pointer-events: auto;
   }
 
+  /* Vertical offsets are 32% / 8% of the illustration height, expressed in
+     block-width units (cqw) via the illustration's 1440:484 aspect ratio. */
   .columns-appdownload .appdownload-card-investor {
-    left: 9.6%;
-    top: 32%;
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: calc(32cqw * 484 / 1440);
   }
 
   .columns-appdownload .appdownload-card-trader {
-    right: 9.6%;
-    top: 8%;
+    grid-column: 4;
+    grid-row: 1;
+    margin-top: calc(8cqw * 484 / 1440);
   }
 }

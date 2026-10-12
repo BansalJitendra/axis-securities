@@ -10,18 +10,22 @@ function buildPill(badgeP, ratingP) {
   const ratingA = ratingP.querySelector('a');
   const href = ratingA ? ratingA.getAttribute('href') : '#';
   const raw = (ratingA ? ratingA.textContent : ratingP.textContent).trim();
-  const m = raw.match(/^([\d.]+)\s*(.*)$/);
+  // Authored either as "4.6 ratings" or descriptively, e.g.
+  // "Axis Direct Investor App on Google Play — rated 4.6 stars".
+  const short = raw.match(/^([\d.]+)\s*(.*)$/);
+  const rated = short ? null : raw.match(/(\d+(?:\.\d+)?)/);
 
   const pill = document.createElement('a');
   pill.className = 'appdownload-pill';
   pill.href = href;
+  if (rated) pill.setAttribute('aria-label', raw);
   if (storePic) pill.appendChild(storePic);
   const num = document.createElement('span');
   num.className = 'appdownload-rating-num';
-  num.textContent = m ? m[1] : raw;
+  num.textContent = (short && short[1]) || (rated && rated[1]) || raw;
   const word = document.createElement('span');
   word.className = 'appdownload-rating-word';
-  word.textContent = m ? m[2] : '';
+  word.textContent = (short && short[2]) || (rated ? 'ratings' : '');
   pill.append(num, word);
   return pill;
 }
