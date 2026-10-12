@@ -485,6 +485,7 @@ header .nav-wrapper > nav[aria-expanded='true'] .nav-group-title > a {
   flex: 1;
 }
 
+header .nav-wrapper > nav[aria-expanded='true'] .nav-group-icon picture,
 header .nav-wrapper > nav[aria-expanded='true'] .nav-group-icon img {
   display: block;
   width: 20px;

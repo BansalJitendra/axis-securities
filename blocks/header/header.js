@@ -234,9 +234,10 @@ function decorateDropItem(li, nav) {
       const img = heading.querySelector('img');
       if (img) {
         img.alt = '';
+        const media = img.closest('picture') || img;
         const iconWrap = el('span', 'nav-group-icon', { 'aria-hidden': 'true' });
-        img.replaceWith(iconWrap);
-        iconWrap.append(img);
+        media.replaceWith(iconWrap);
+        iconWrap.append(media);
       }
       heading.append(icon(links ? 'chevron-down' : 'chevron-right'));
     }
