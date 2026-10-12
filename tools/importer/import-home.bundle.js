@@ -42,34 +42,144 @@ var CustomImportScript = (() => {
   });
 
   // tools/importer/parsers/hero-carousel.js
-  function parse(element, { document: document2 }) {
-    let slides = Array.from(element.querySelectorAll(".swiper-slide"));
-    if (!slides.length) {
-      slides = Array.from(element.querySelectorAll(".MuiGrid-container")).filter((g) => g.querySelector(".mui-lkj04c, h1, h2, h3"));
+  var ACCENT_RE = /color\s*:\s*(hsl\(\s*334|#99144e|#97144d|rgb\(\s*15[13],\s*20)/i;
+  var cleanText = (s) => s.replace(/ /g, " ").replace(/\s+/g, " ");
+  var styled = (n, test) => n.nodeType === 1 && (test(n.getAttribute("style") || "") || [...n.querySelectorAll("[style]")].some((c) => test(c.getAttribute("style"))));
+  var isAccent = (n) => styled(n, (s) => ACCENT_RE.test(s));
+  var isSmall = (n) => styled(n, (s) => {
+    const m = s.match(/font-size\s*:\s*([\d.]+)px/i);
+    return !!m && parseFloat(m[1]) <= 12;
+  });
+  function sourceLines(src) {
+    const blocks = src.querySelectorAll("p");
+    const lines = [];
+    (blocks.length ? [...blocks] : [src]).forEach((p) => {
+      let line = [];
+      p.childNodes.forEach((n) => {
+        if (n.nodeType === 1 && n.tagName === "BR") {
+          lines.push(line);
+          line = [];
+        } else line.push(n);
+      });
+      lines.push(line);
+    });
+    return lines.filter((l) => l.some((n) => cleanText(n.textContent).trim()));
+  }
+  function appendInline(document2, target, nodes) {
+    nodes.forEach((n) => {
+      const text = cleanText(n.textContent);
+      if (!text.trim() && n.nodeType === 1) return;
+      if (isAccent(n)) {
+        const strong = document2.createElement("strong");
+        strong.textContent = text.trim();
+        target.append(strong);
+      } else {
+        target.append(document2.createTextNode(text));
+      }
+    });
+    const { firstChild, lastChild } = target;
+    if (firstChild && firstChild.nodeType === 3) firstChild.textContent = firstChild.textContent.replace(/^\s+/, "");
+    if (lastChild && lastChild.nodeType === 3) lastChild.textContent = lastChild.textContent.replace(/\s+$/, "");
+  }
+  function buildTitle(document2, src, level) {
+    const h = document2.createElement(`h${level}`);
+    sourceLines(src).forEach((nodes, i) => {
+      if (i) h.append(document2.createElement("br"));
+      appendInline(document2, h, nodes);
+    });
+    return h.textContent.trim() ? h : null;
+  }
+  function buildSubheading(document2, src) {
+    const out = [];
+    let list = null;
+    sourceLines(src).forEach((nodes) => {
+      const text = cleanText(nodes.map((n) => n.textContent).join("")).trim();
+      if (/^[-–•]\s+/.test(text)) {
+        if (!list) {
+          list = document2.createElement("ul");
+          out.push(list);
+        }
+        const li = document2.createElement("li");
+        appendInline(document2, li, nodes);
+        if (li.firstChild && li.firstChild.nodeType === 3) {
+          li.firstChild.textContent = li.firstChild.textContent.replace(/^[-–•]\s+/, "");
+        }
+        list.append(li);
+        return;
+      }
+      list = null;
+      const p = document2.createElement("p");
+      const textNodes = nodes.filter((n) => cleanText(n.textContent).trim());
+      if (textNodes.every(isSmall)) {
+        const sub = document2.createElement("sub");
+        appendInline(document2, sub, nodes);
+        p.append(sub);
+      } else {
+        appendInline(document2, p, nodes);
+      }
+      out.push(p);
+    });
+    return out;
+  }
+  function originalImageUrl(img) {
+    const src = img.getAttribute("src") || "";
+    const m = src.match(/[?&]url=([^&]+)/);
+    if (m) return decodeURIComponent(m[1]);
+    try {
+      return new URL(src, "https://www.axisdirect.in").href;
+    } catch (e) {
+      return src;
     }
+  }
+  function parse(element, { document: document2 }) {
+    const seenIdx = /* @__PURE__ */ new Set();
+    const slides = [...element.querySelectorAll(".swiper-slide")].filter((s) => {
+      if (s.classList.contains("swiper-slide-duplicate")) return false;
+      const idx = s.getAttribute("data-swiper-slide-index");
+      if (idx === null) return true;
+      if (seenIdx.has(idx)) return false;
+      seenIdx.add(idx);
+      return true;
+    });
     if (!slides.length) {
       element.replaceWith(...element.childNodes);
       return;
     }
     const cells = [];
     slides.forEach((slide) => {
-      const heading = slide.querySelector("h1, h2, h3") || slide.querySelector(".mui-6pydv");
-      const subheading = slide.querySelector("p.mui-zsakwy, .mui-zsakwy");
+      const copies = [...slide.children].filter((c) => c.querySelector('[role="heading"], h1, h2, h3'));
+      const root = copies[copies.length - 1] || slide;
+      const titleSrc = root.querySelector('[role="heading"], h1, h2, h3');
+      const title = titleSrc ? buildTitle(document2, titleSrc, cells.length ? 2 : 1) : null;
+      const subSrc = root.querySelector('[role="none"]');
+      const subheading = subSrc ? buildSubheading(document2, subSrc) : [];
       const ctas = [];
-      const seenHrefs = /* @__PURE__ */ new Set();
-      slide.querySelectorAll('a.MuiButton-root, a[class*="MuiButton"]').forEach((a) => {
-        const href = a.getAttribute("href") || "";
-        if (seenHrefs.has(href)) return;
-        seenHrefs.add(href);
-        ctas.push(a);
+      const hrefs = /* @__PURE__ */ new Set();
+      root.querySelectorAll("a[href]").forEach((a) => {
+        const href = a.getAttribute("href");
+        const label = cleanText(a.textContent).trim();
+        if (!label || hrefs.has(href)) return;
+        hrefs.add(href);
+        const p = document2.createElement("p");
+        const strong = document2.createElement("strong");
+        const link = document2.createElement("a");
+        link.href = href;
+        link.textContent = label;
+        strong.append(link);
+        p.append(strong);
+        ctas.push(p);
       });
-      const image = slide.querySelector("img");
       const contentCell = [];
-      if (image) contentCell.push(image);
-      if (heading) contentCell.push(heading);
-      if (subheading && subheading !== heading) contentCell.push(subheading);
-      ctas.forEach((cta) => contentCell.push(cta));
-      if (contentCell.length) cells.push([contentCell]);
+      const srcImg = root.querySelector("img");
+      if (srcImg) {
+        const img = document2.createElement("img");
+        img.src = originalImageUrl(srcImg);
+        img.alt = title ? cleanText([...title.childNodes].map((n) => n.nodeName === "BR" ? " " : n.textContent).join("")).trim() : srcImg.getAttribute("alt") || "";
+        contentCell.push(img);
+      }
+      if (title) contentCell.push(title);
+      contentCell.push(...subheading, ...ctas);
+      if (title || contentCell.length > 1) cells.push([contentCell]);
     });
     if (!cells.length) {
       element.replaceWith(...element.childNodes);
@@ -308,7 +418,7 @@ var CustomImportScript = (() => {
     blocks: [
       {
         name: "hero-carousel",
-        instances: [".mui-cdmdob .swiper-wrapper", ".mui-cdmdob"]
+        instances: ["#main-content .swiper:has(> .swiper-wrapper > .swiper-slide h1)"]
       },
       {
         name: "widget",

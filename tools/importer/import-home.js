@@ -33,7 +33,7 @@ const PAGE_TEMPLATE = {
   blocks: [
     {
       name: 'hero-carousel',
-      instances: ['.mui-cdmdob .swiper-wrapper', '.mui-cdmdob']
+      instances: ['#main-content .swiper:has(> .swiper-wrapper > .swiper-slide h1)']
     },
     {
       name: 'widget',

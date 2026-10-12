@@ -97,9 +97,13 @@ export default function decorate(block) {
       else s.setAttribute('aria-hidden', 'true');
     });
     dotButtons.forEach((d, i) => {
-      d.classList.toggle('active', i === current);
+      d.classList.remove('active');
       d.setAttribute('aria-selected', i === current ? 'true' : 'false');
     });
+    // Re-trigger the active dot's progress fill so it restarts with the timer.
+    // eslint-disable-next-line no-void
+    void dotButtons[current].offsetWidth;
+    dotButtons[current].classList.add('active');
   };
 
   const go = (index) => {
@@ -117,8 +121,17 @@ export default function decorate(block) {
   next.addEventListener('click', () => { go(current + 1); start(); });
   dotButtons.forEach((d, i) => d.addEventListener('click', () => { go(i); start(); }));
 
-  block.addEventListener('mouseenter', stop);
-  block.addEventListener('mouseleave', start);
+  block.style.setProperty('--hero-carousel-autoplay', `${AUTOPLAY_MS}ms`);
+
+  block.addEventListener('mouseenter', () => {
+    stop();
+    block.classList.add('paused');
+  });
+  block.addEventListener('mouseleave', () => {
+    block.classList.remove('paused');
+    update();
+    start();
+  });
 
   update();
   start();

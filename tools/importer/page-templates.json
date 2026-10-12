@@ -15,8 +15,7 @@
         {
           "name": "hero-carousel",
           "instances": [
-            ".mui-cdmdob .swiper-wrapper",
-            ".mui-cdmdob"
+            "#main-content .swiper:has(> .swiper-wrapper > .swiper-slide h1)"
           ]
         },
         {

@@ -1,16 +1,18 @@
 /* Block: hero-carousel — rotating promotional hero (text + illustration).
    Values extracted from source computed styles (www.axisdirect.in). */
 
-/* Full-bleed background: escape the section max-width/padding. */
+/* Full-bleed: escape the section max-width/padding. */
 .hero-carousel-container .hero-carousel-wrapper {
   max-width: unset;
   padding: 0;
 }
 
 .hero-carousel {
+  --hero-carousel-autoplay: 5000ms;
+
   position: relative;
   overflow: hidden;
-  background-color: #fffefd;
+  padding-bottom: 44px; /* room for the dots row (24px) + gap */
   color: var(--text-color);
 }
 
@@ -25,54 +27,87 @@
   min-width: 100%;
 }
 
-/* Cell = the flex row that centers content within a max width. */
+/* Mobile: one centred column — title, description, illustration, CTA. */
 .hero-carousel-cell {
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 24px;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 32px 24px;
-}
-
-/* Text column */
-.hero-carousel-text {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  align-items: center;
+  padding: 16px;
+  text-align: center;
 }
 
-/* Title — the <h1> (slide 1) and the first <p> (slides 2-5) are the same
-   large heading on the source: ~30px mobile / weight 700 / #282828. */
+.hero-carousel-text {
+  display: contents;
+}
+
+.hero-carousel-text > * {
+  order: 1;
+}
+
+.hero-carousel-image {
+  order: 2;
+  width: 52%;
+  max-width: 225px;
+  padding-top: 8px;
+}
+
+.hero-carousel-text > .button-wrapper {
+  order: 3;
+}
+
+/* Title */
 .hero-carousel-text h1,
-.hero-carousel-text > p:first-child {
+.hero-carousel-text h2 {
   margin: 0;
   font-family: var(--heading-font-family);
   font-weight: 700;
-  font-size: 30px;
-  line-height: 1.15;
+  font-size: 18px;
+  line-height: 1.3;
   color: var(--text-color);
+  scroll-margin: 0;
 }
 
-/* Description subtitle (the middle paragraph on every slide) — bold, muted
-   grey, ~20px (source: 19.8px / 700 / #575757). */
-/* stylelint-disable-next-line no-descending-specificity */
-.hero-carousel-text > p:not(:first-child, :last-child) {
-  margin: 16px 0 0;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 1.3;
+/* Accent words in the title / small print ("SEBI presents", "Grab Deals"). */
+.hero-carousel-text strong {
+  color: #99144e;
+}
+
+/* Description */
+.hero-carousel-text p,
+.hero-carousel-text ul {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
   color: #575757;
 }
 
-/* CTA button */
-.hero-carousel-text p:last-child {
-  margin-top: 24px;
+.hero-carousel-text ul {
+  padding: 0;
+  list-style: none;
 }
 
-.hero-carousel-text p:last-child a:any-link,
+.hero-carousel-text li::before {
+  content: '- ';
+}
+
+.hero-carousel-text ul + p {
+  margin-top: 0;
+}
+
+/* Small print */
+.hero-carousel-text sub {
+  vertical-align: baseline;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* CTA */
+.hero-carousel-text p.button-wrapper {
+  margin: 16px 0 0;
+}
+
 .hero-carousel a.button:any-link {
   display: inline-flex;
   align-items: center;
@@ -80,156 +115,208 @@
   margin: 0;
   border: none;
   border-radius: 8px;
-  padding: 16px 24px;
+  padding: 12px 16px;
   background-color: var(--brand-primary);
   color: #fff;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 20px;
   white-space: nowrap;
 }
 
-.hero-carousel-text p:last-child a:any-link:hover,
-.hero-carousel-text p:last-child a:any-link:focus-visible,
 .hero-carousel a.button:any-link:hover,
 .hero-carousel a.button:any-link:focus-visible {
-  background-color: var(--brand-primary-dark, #7a103e);
+  background-color: var(--brand-primary-dark);
   color: #fff;
   text-decoration: none;
 }
 
-/* Image column */
-.hero-carousel-image {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-}
-
+/* Illustration */
 /* stylelint-disable-next-line no-descending-specificity */
 .hero-carousel-image p {
   margin: 0;
 }
 
-.hero-carousel img {
+.hero-carousel-image img {
+  display: block;
   width: 100%;
   height: auto;
-  object-fit: contain;
 }
 
-/* Navigation arrows */
+/* Navigation arrows — desktop only. */
 .hero-carousel-nav {
-  position: absolute;
-  inset: auto 0 12px;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  pointer-events: none;
+  display: none;
 }
 
 .hero-carousel-arrow {
   pointer-events: auto;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--border-color, #e2e2e2);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--brand-primary);
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
   padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--light-color, #f9f9f9);
+  color: var(--brand-accent);
+  cursor: pointer;
 }
 
 .hero-carousel-arrow::before {
   content: '';
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
   border-right: 2px solid currentcolor;
   border-bottom: 2px solid currentcolor;
 }
 
 .hero-carousel-prev::before {
   transform: rotate(135deg);
-  margin-left: 4px;
+  margin-left: 3px;
 }
 
 .hero-carousel-next::before {
   transform: rotate(-45deg);
-  margin-right: 4px;
+  margin-right: 3px;
 }
 
-.hero-carousel-arrow:hover {
-  border-color: var(--brand-primary);
-}
-
-/* Dots */
+/* Dots — grey 6px pills; the active one widens and fills pink over the
+   autoplay interval. */
 .hero-carousel-dots {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 18px;
+  inset: auto 0 0;
+  height: 24px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
 }
 
 .hero-carousel-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
+  margin: 2px;
   padding: 0;
   border: none;
-  border-radius: 50%;
-  background: #d9c3cd;
+  border-radius: 16px;
+  background: linear-gradient(var(--brand-accent), var(--brand-accent)) no-repeat 0 0 / 0 100%, #b4b4b4;
   cursor: pointer;
-  transition: width 0.3s ease, background 0.3s ease;
 }
 
 .hero-carousel-dot.active {
-  width: 22px;
-  border-radius: 4px;
-  background: var(--brand-primary);
+  width: 16px;
+  background-size: 100% 100%, auto;
+  animation: hero-carousel-progress var(--hero-carousel-autoplay) linear;
 }
 
-@media (width >= 900px) {
-  .hero-carousel {
-    min-height: 496px;
+.hero-carousel.paused .hero-carousel-dot.active {
+  animation-play-state: paused;
+}
+
+@keyframes hero-carousel-progress {
+  from { background-size: 0 100%, auto; }
+  to { background-size: 100% 100%, auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel-track {
+    transition: none;
   }
 
+  .hero-carousel-dot.active {
+    animation: none;
+  }
+}
+
+/* Desktop: text column left (40%), illustration flush right, 496px slides. */
+@media (width >= 1024px) {
   .hero-carousel-cell {
     flex-direction: row;
     align-items: center;
-    gap: 40px;
-    padding: 48px 64px;
-    min-height: 496px;
+    max-width: 1600px;
+    height: 496px;
+    margin: 0 auto;
+    padding: 0 64px;
     box-sizing: border-box;
+    text-align: left;
   }
 
   .hero-carousel-text {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     flex: 0 0 40%;
   }
 
   .hero-carousel-image {
-    flex: 1 1 60%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    max-width: 60%;
+    height: 100%;
+    padding: 0;
   }
 
-  /* Title (h1 + first-p on promo slides) grows to the source's 46px. */
+  .hero-carousel-image img {
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right center;
+  }
+
   .hero-carousel-text h1,
-  .hero-carousel-text > p:first-child {
-    font-size: 46px;
-    line-height: 1.12;
+  .hero-carousel-text h2 {
+    font-size: clamp(42.9px, calc(34.4px + 0.837vw), 48px);
+    line-height: 1.125;
   }
 
-  /* Description stays ~20px on desktop. */
-  /* stylelint-disable-next-line no-descending-specificity */
-  .hero-carousel-text > p:not(:first-child, :last-child) {
-    font-size: 20px;
+  .hero-carousel-text p,
+  .hero-carousel-text ul {
+    margin-top: 16px;
+    font-size: 19.8px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .hero-carousel-text ul {
+    padding-left: 8px;
+  }
+
+  .hero-carousel-text li + li {
+    margin-top: 1.3em;
+  }
+
+  .hero-carousel-text ul + p {
+    margin-top: 1.3em;
+  }
+
+  .hero-carousel-text sub {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .hero-carousel-text p.button-wrapper {
+    margin-top: 32px;
+  }
+
+  .hero-carousel a.button:any-link {
+    padding: 16px;
+    font-size: 16px;
+    line-height: 24px;
   }
 
   .hero-carousel-nav {
-    inset: 0;
+    position: absolute;
+    inset: 0 0 44px;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 24px;
+    pointer-events: none;
   }
 }

@@ -3,10 +3,10 @@
   "pluginRoot": "/home/node/.excat-marketplaces/excat-marketplace/excat",
   "sites": {
     "axis-securities": {
-      "previewOrg": "BansalJitendra",
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json",
+      "previewOrg": "bansaljitendra",
       "previewSite": "axis-securities",
-      "contentHostUrl": "https://content.da.live/bansaljitendra/axis-securities/",
-      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json"
+      "contentHostUrl": "https://content.da.live/bansaljitendra/axis-securities/"
     }
   }
 }
