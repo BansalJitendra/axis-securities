@@ -1,5 +1,12 @@
 /* Axis Direct footer — matched to https://www.axisdirect.in/
-   The whole footer sits on the brand maroon with white text. */
+   The whole footer sits on the brand maroon with white text.
+   Mobile: accordion link groups, contact block, app card, A-Z index, legal
+   text and policy links, separated by thin rules (source computed styles).
+   Desktop (>= 900px): five link columns, everything expanded. */
+
+/* the footer's parts are unrelated element groups; ordering by part reads
+   better than ordering by specificity */
+/* stylelint-disable no-descending-specificity */
 footer {
   background-color: var(--brand-primary, #97144d);
   color: #fff;
@@ -8,9 +15,12 @@ footer {
 }
 
 footer .footer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   margin: auto;
   max-width: 1600px;
-  padding: 24px;
+  padding: 24px 16px;
 }
 
 footer .footer p {
@@ -32,77 +42,190 @@ footer .footer a:hover {
 }
 
 footer .footer h3 {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   color: #fff;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
+  line-height: 22.67px;
+  letter-spacing: 0.16px;
 }
 
 /* brand logo */
-footer .footer-brand {
-  padding-bottom: 8px;
-}
-
 footer .footer-brand img {
-  max-height: 40px;
+  display: block;
+  height: 58px;
   width: auto;
 }
 
-/* primary link columns — each .footer-col holds one heading + its list so the
-   links stay under their heading. */
+/* --- primary link groups: accordions on mobile --- */
 footer .footer-links {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px 32px;
-  align-items: start;
+  border-bottom: 1px solid rgb(255 255 255 / 25%);
+}
+
+footer .footer-col {
+  padding-bottom: 32px;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+}
+
+footer .footer .footer-col h3 {
+  margin: 0;
+}
+
+footer .footer-col-toggle {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  height: 47px; /* + the group's 1px top rule = source 48px row */
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #f9f9f9;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* "+" / "−" */
+footer .footer-col-toggle::after {
+  content: "";
+  flex: 0 0 14px;
+  height: 14px;
+  margin: 0 5px 5px 0;
+  background:
+    linear-gradient(currentcolor, currentcolor) center / 100% 2px no-repeat,
+    linear-gradient(currentcolor, currentcolor) center / 2px 100% no-repeat;
+}
+
+footer .footer-col.open .footer-col-toggle::after {
+  background: linear-gradient(currentcolor, currentcolor) center / 100% 2px no-repeat;
 }
 
 footer .footer-links ul {
+  display: none;
   list-style: none;
-  margin: 0 0 8px;
+  margin: 0 0 -8px;
   padding: 0;
 }
 
-footer .footer-links li {
-  margin: 0 0 8px;
-  line-height: 1.4;
+footer .footer-col.open ul {
+  display: block;
 }
 
-/* contact + app download */
-footer .footer-contact h3 {
+footer .footer-links li {
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
+}
+
+footer .footer .footer-links a:any-link {
+  color: #f9f9f9;
+}
+
+/* --- contact + app download --- */
+footer .footer-contact p {
+  color: #e2e2e2;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.24px;
+}
+
+footer .footer-contact-line {
+  display: flex;
+  gap: 8px;
+}
+
+footer .footer-label {
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.32px;
+}
+
+footer .footer-app-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 10%);
+}
+
+footer .footer .footer-app-card h3 {
+  max-width: 160px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+footer .footer-app-links {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
 }
 
 footer .footer-contact img {
-  height: 44px;
+  display: block;
+  height: 48px;
   width: auto;
-  margin-right: 12px;
 }
 
-/* A-Z stocks index */
+/* --- A-Z stocks index --- */
+footer .footer-stocks-index,
+footer .footer-legal,
+footer .footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+}
+
 footer .footer-stocks-index ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
-  margin: 8px 0 0;
+  gap: 8px 0;
+  margin: 0;
   padding: 0;
 }
 
 footer .footer-stocks-index li {
-  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.24px;
 }
 
-/* legal / regulatory disclosures — kept on the maroon, slightly muted white */
+footer .footer .footer-stocks-index a:any-link {
+  color: #e2e2e2;
+}
+
+footer .footer-stocks-index li:not(:last-child)::after {
+  content: "|";
+  margin: 0 8px;
+  color: #e2e2e2;
+}
+
+/* --- legal / regulatory disclosures --- */
 footer .footer-legal {
-  border-top: 1px solid rgb(255 255 255 / 25%);
-  color: rgb(255 255 255 / 85%);
+  color: #fff;
   font-size: 12px;
-  line-height: 1.6;
+  line-height: 18px;
+  letter-spacing: 0.32px;
 }
 
-footer .footer-legal h3 {
-  font-size: 13px;
+footer .footer .footer-legal h3 {
+  margin: 24px 0 8px;
+  padding-top: 24px;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.24px;
 }
 
 footer .footer-legal ul {
@@ -114,37 +237,249 @@ footer .footer-legal li {
   margin-bottom: 6px;
 }
 
-/* bottom policy bar + copyright */
+/* --- bottom policy links + copyright --- */
 footer .footer-bottom {
-  border-top: 1px solid rgb(255 255 255 / 25%);
-  color: rgb(255 255 255 / 85%);
+  color: rgb(255 255 255 / 80%);
   font-size: 12px;
+  line-height: 18px;
+}
+
+footer .footer-policy {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin: 0;
+  padding: 0 0 16px;
+}
+
+footer .footer-policy li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+footer .footer-policy li::before {
+  content: "•";
+}
+
+footer .footer .footer-policy a:any-link {
+  color: rgb(255 255 255 / 80%);
 }
 
 footer .footer-bottom p:last-child {
-  margin-top: 8px;
+  margin: 0 -16px;
+  padding: 16px 16px 0;
+  border-top: 1px solid rgb(255 255 255 / 25%);
   color: #fff;
-}
-
-@media (width >= 600px) {
-  footer .footer-links {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  font-size: 11px;
+  line-height: 15px;
+  letter-spacing: 0.32px;
+  text-align: center;
 }
 
 @media (width >= 900px) {
   footer .footer > div {
+    display: block;
     padding: 32px;
   }
 
-  footer .footer-links {
-    grid-template-columns: repeat(5, 1fr);
+  footer .footer h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    line-height: 1.25;
+    letter-spacing: normal;
   }
 
+  footer .footer-brand {
+    padding-bottom: 8px;
+  }
+
+  footer .footer-brand img {
+    display: inline;
+    height: auto;
+    max-height: 40px;
+  }
+
+  /* primary link columns — each .footer-col holds one heading + its list */
+  footer .footer-links {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px 32px;
+    align-items: start;
+    border-bottom: 0;
+  }
+
+  footer .footer-col {
+    padding-bottom: 0;
+    border-top: 0;
+  }
+
+  footer .footer .footer-col h3 {
+    margin: 0 0 12px;
+  }
+
+  footer .footer-col-toggle {
+    display: inline;
+    width: auto;
+    height: auto;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  footer .footer-col-toggle::after {
+    content: none;
+  }
+
+  footer .footer-links ul {
+    display: block;
+    margin: 0 0 8px;
+  }
+
+  footer .footer-links li {
+    margin: 0 0 8px;
+    padding: 0;
+    font-size: inherit;
+    line-height: 1.4;
+    letter-spacing: normal;
+  }
+
+  footer .footer .footer-links a:any-link {
+    color: #fff;
+  }
+
+  /* contact + app download */
   footer .footer-contact {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 48px;
+  }
+
+  footer .footer-contact p {
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: normal;
+  }
+
+  footer .footer-contact-line {
+    display: block;
+  }
+
+  footer .footer-label {
+    margin-right: 4px;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: normal;
+  }
+
+  footer .footer-contact h3,
+  footer .footer .footer-app-card h3 {
+    max-width: none;
+    margin: 16px 0 12px;
+    font-size: 15px;
+    line-height: 1.25;
+  }
+
+  footer .footer-app-card,
+  footer .footer-app-links {
+    display: contents;
+  }
+
+  footer .footer-contact img {
+    display: inline;
+    height: 44px;
+    margin-right: 12px;
+  }
+
+  /* A-Z stocks index */
+  footer .footer-stocks-index {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  footer .footer-stocks-index ul {
+    gap: 8px 14px;
+    margin: 8px 0 0;
+  }
+
+  footer .footer-stocks-index li {
+    font-size: inherit;
+    font-weight: 700;
+    line-height: inherit;
+    letter-spacing: normal;
+  }
+
+  footer .footer .footer-stocks-index a:any-link {
+    color: #fff;
+  }
+
+  footer .footer-stocks-index li:not(:last-child)::after {
+    content: none;
+  }
+
+  /* legal / regulatory disclosures */
+  footer .footer-legal,
+  footer .footer-bottom {
+    padding-top: 0;
+    color: rgb(255 255 255 / 85%);
+  }
+
+  footer .footer-legal {
+    line-height: 1.6;
+    letter-spacing: normal;
+  }
+
+  footer .footer .footer-legal h3 {
+    margin: 0 0 12px;
+    padding-top: 0;
+    border-top: 0;
+    font-size: 13px;
+    line-height: 1.25;
+    letter-spacing: normal;
+  }
+
+  /* bottom policy links + copyright */
+  footer .footer-bottom {
+    line-height: inherit;
+  }
+
+  footer .footer-policy {
+    gap: 0;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+
+  footer .footer-policy li {
+    display: inline;
+  }
+
+  footer .footer-policy li::before {
+    content: none;
+  }
+
+  footer .footer-policy li + li::before {
+    content: "|";
+    margin: 0 2px;
+  }
+
+  footer .footer .footer-policy a:any-link {
+    color: #fff;
+  }
+
+  footer .footer-bottom p:last-child {
+    margin: 8px 0;
+    padding: 0;
+    border-top: 0;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: normal;
+    text-align: start;
   }
 }
