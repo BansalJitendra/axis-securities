@@ -330,7 +330,13 @@ main .section.highlight {
    from the source hero. Values extracted from getComputedStyle on
    https://www.axisdirect.in/. Static presentation only (no JS).
    ------------------------------------------------------------------------- */
+
+/* Top row like the source: heading + subtitle on the left, the 88px
+   illustration on the right (vertically centred, running into the card's
+   right padding); everything below spans the full width. */
 main .section > .default-content-wrapper:has(> h2#open-your-account) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   box-sizing: border-box;
   max-width: 400px;
   margin: 40px auto;
@@ -392,11 +398,14 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) {
 
 /* reset default heading/paragraph margins inside the card */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > * {
+  grid-column: 1 / -1;
   margin: 0;
 }
 
 /* heading */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
+  grid-column: 1;
+  grid-row: 1;
   font-size: 20px;
   font-weight: 700;
   line-height: 1.3;
@@ -405,15 +414,20 @@ main .section > .default-content-wrapper:has(> h2#open-your-account) > h2 {
 
 /* subtitle */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(2) {
+  grid-column: 1;
+  grid-row: 2;
   margin-top: 8px;
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 20px;
   color: var(--text-color);
 }
 
 /* icon (88 x 88 in source) */
 main .section > .default-content-wrapper:has(> h2#open-your-account) > p:nth-child(3) {
-  margin-top: 16px;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin: 0 -24px 0 0;
   line-height: 0;
 }
 
